@@ -1,0 +1,3 @@
+# Simple variable with astronomical unit
+float dist = 4.2 pc;
+print(dist);

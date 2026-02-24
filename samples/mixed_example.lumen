@@ -1,0 +1,6 @@
+float flux = 2.8 Jy;
+bool bright = flux > 1 Jy;
+
+if (bright) {
+    print("Bright source detected");
+}
