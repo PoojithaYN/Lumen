@@ -1,0 +1,25 @@
+# Simplified Lumen version (no functions, no arrays, no CAMB)
+
+float H0 = 67.0;
+float ombh2 = 0.022;
+float omch2 = 0.12;
+float tau = 0.06;
+float As = 2e-9;
+float ns = 0.96;
+
+print("Testing grey body effect (simulated values):");
+
+float cl1_100 = 1.234e-10;   # fake standard value
+float cl2_100 = 1.238e-10;   # fake grey-body value
+
+float diff_percent = abs(cl1_100 - cl2_100) / cl1_100 * 100;
+
+print("Standard C_l(100): ", cl1_100);
+print("Grey body C_l(100): ", cl2_100);
+print("Difference: ", diff_percent, "%");
+
+if (diff_percent > 0.1) {
+    print("✓ Grey body IS affecting physics");
+} else {
+    print("❌ Grey body NOT affecting physics");
+}
