@@ -1,0 +1,6 @@
+dataset stars = load("gaia.csv");
+filter stars where mag < 6;
+
+print("Filtered bright stars count:", stars.shape[0]);  # assuming Pandas
+coord center = ra_dec(56.75, 24.116);
+print("Center coordinate created.");

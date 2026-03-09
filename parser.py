@@ -24,16 +24,16 @@ def p_program(p):
     p[0] = Program(p[1])
 
 def p_statements(p):
-    '''statements : statement statements
-                  | statement'''
+    '''statements : statements statement
+                  | empty'''
     if len(p) == 3:
-        p[0] = [p[1]] + p[2]
+        p[0] = p[1] + [p[2]]
     else:
-        p[0] = [p[1]]
+        p[0] = []
 
-def p_statements_empty(p):
-    '''statements : '''
-    p[0] = []
+def p_empty(p):
+    '''empty :'''
+    pass
 
 # Declarations
 def p_declaration(p):
@@ -123,8 +123,21 @@ def p_arg_list(p):
 
 # I/O
 def p_print(p):
-    '''statement : PRINT LPAREN expression RPAREN SEMI'''
+    '''statement : PRINT LPAREN print_args_opt RPAREN SEMI'''
     p[0] = PrintStmt(p[3])
+
+def p_print_args_opt(p):
+    '''print_args_opt : print_args
+                      | '''
+    p[0] = p[1] if len(p) == 2 else []
+
+def p_print_args(p):
+    '''print_args : expression COMMA print_args
+                  | expression'''
+    if len(p) == 4:
+        p[0] = [p[1]] + p[3]
+    else:
+        p[0] = [p[1]]
 
 # Astronomy statements
 def p_load_dataset(p):
@@ -135,22 +148,7 @@ def p_filter(p):
     '''statement : FILTER ID WHERE expression SEMI'''
     p[0] = FilterStmt(p[2], p[4])
 
-def p_coord_decl(p):
-    '''statement : COORD ID ASSIGN RA_DEC LPAREN expression COMMA expression RPAREN SEMI'''
-    p[0] = CoordDecl(p[2], p[6], p[8])
 
-
-
-
-
-
-
-
-
-
-def p_coord_expr(p):
-    '''coord_expr : RA_DEC LPAREN expression COMMA expression RPAREN'''
-    p[0] = CoordDecl('temp', p[3], p[5])  # name set in statement
 
 def p_expression_binop(p):
     '''expression : expression PLUS expression
@@ -193,9 +191,15 @@ def p_expression_id(p):
     p[0] = Var(p[1])
 
 def p_expression_unit(p):
-    '''expression : NUMBER unit'''
-    p[0] = UnitExpr(p[1], p[2])
-
+    '''expression : NUMBER unit
+                  | NUMBER unit unit'''
+    unit_str = p[2]
+    if len(p) == 4:
+        unit_str += " " + p[3]          # "km s"
+    p[0] = UnitExpr(p[1], unit_str)
+def p_input_stmt(p):
+    '''statement : INPUT LPAREN ID RPAREN SEMI'''
+    p[0] = InputStmt(p[3])   # p[3] is the ID (variable name)
 def p_unit(p):
     '''unit : UNIT_KM
             | UNIT_S

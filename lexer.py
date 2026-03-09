@@ -5,19 +5,20 @@ tokens = [
     'ID', 'NUMBER', 'STRING',
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
     'EQ', 'NEQ', 'LT', 'GT', 'LE', 'GE',
-    'AND', 'OR', 'NOT',
+
     'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
     'SEMI', 'ASSIGN', 'COMMA',
     'IN',
 ]
 
 reserved = {
-    'int': 'INT', 'float': 'FLOAT', 'bool': 'BOOL_TYPE', 'string': 'STRING_TYPE',
+   'int': 'INT', 'float': 'FLOAT', 'bool': 'BOOL_TYPE', 'string': 'STRING_TYPE',
     'if': 'IF', 'else': 'ELSE', 'for': 'FOR', 'while': 'WHILE',
     'def': 'DEF', 'return': 'RETURN',
-    'print': 'PRINT', 'input': 'INPUT',
+    'print': 'PRINT',
+    'input': 'INPUT',
     'dataset': 'DATASET', 'load': 'LOAD', 'filter': 'FILTER', 'where': 'WHERE',
-    'coord': 'COORD', 'ra_dec': 'RA_DEC',
+  
     'and': 'AND', 'or': 'OR', 'not': 'NOT',
     'true': 'TRUE', 'false': 'FALSE',
     # Astronomy units

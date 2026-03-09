@@ -1,0 +1,6 @@
+float speed = 250 km s;
+if (speed > 200 km s) {
+    print("Fast moving object");
+} else {
+    print("Slow or stationary");
+}

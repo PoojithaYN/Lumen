@@ -43,8 +43,8 @@ class Call(Node):
         super().__init__('Call', name=name, args=args)
 
 class PrintStmt(Node):
-    def __init__(self, expr):
-        super().__init__('Print', expr=expr)
+    def __init__(self, args):
+        super().__init__('Print', args=args)   # args is list of expressions
 
 # Astronomy specific
 class LoadDataset(Node):
@@ -75,6 +75,10 @@ class Number(Node):
 class StringLit(Node):
     def __init__(self, value):
         super().__init__('String', value=value)
+
+class InputStmt(Node):
+    def __init__(self, var_name):
+        super().__init__('InputStmt', var_name=var_name)
 
 class BoolLit(Node):
     def __init__(self, value):

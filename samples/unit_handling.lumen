@@ -1,0 +1,7 @@
+float dist = 4.2 pc;
+float speed = 220 km s;
+
+print("Distance in parsecs:", dist);
+print("Speed in km/s:", speed);
+print("Distance + 10 pc:", dist + 10 pc);
+print("Speed × 2:", speed * 2);
