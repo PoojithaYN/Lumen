@@ -156,14 +156,14 @@ def ir_to_code(ir_node, var_types=None):
             'and': 'and', 'or': 'or',
             '^': '**'
         }
-        # ✅ Use ir_node.operator (the symbol) not ir_node.op (which is always 'binop')
+        #Use ir_node.operator (the symbol) not ir_node.op (which is always 'binop')
         op = op_map.get(ir_node.operator, ir_node.operator)
         return f"({left} {op} {right})"
 
     if ir_node.op == 'unaryop':
         expr = ir_to_code(ir_node.expr, var_types)
         op_map = {'not': 'not ', '-': '-'}
-        # ✅ Use ir_node.operator here too
+        #Use ir_node.operator here too
         return f"{op_map.get(ir_node.operator, ir_node.operator)}{expr}"
 
     if ir_node.op == 'member_access':

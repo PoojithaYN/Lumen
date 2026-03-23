@@ -132,7 +132,7 @@ def ir_expr(expr):
         return IRNode('var', name=expr.name)
 
     if isinstance(expr, BinOp):
-        # ✅ Use 'operator' not 'op' to avoid clash with IRNode's own .op field
+        # Use 'operator' not 'op' to avoid clash with IRNode's own .op field
         return IRNode('binop',
             operator=expr.op,
             left=ir_expr(expr.left),
