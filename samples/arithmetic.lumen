@@ -1,0 +1,15 @@
+# Arithmetic operations
+int a = 10;
+int b = 3;
+
+int sum = a + b;
+int diff = a - b;
+float ratio = a / b;
+
+print("Sum:", sum);
+print("Difference:", diff);
+print("Ratio:", ratio);
+
+# Nested expressions
+float result = (a + b) * (a - b);
+print("(a+b)*(a-b):", result);

@@ -1,0 +1,24 @@
+# Function definitions and calls
+def greet(name) {
+    print("Hello,", name);
+}
+
+def add(a, b) {
+    int result = a + b;
+    print("Sum:", result);
+    return result;
+}
+
+def is_bright(magnitude) {
+    if (magnitude < 3) {
+        print("Star is bright");
+    } else {
+        print("Star is dim");
+    }
+}
+
+# Call the functions
+greet("Astronomer");
+add(10, 25);
+is_bright(2);
+is_bright(5);

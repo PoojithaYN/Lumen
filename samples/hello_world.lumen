@@ -1,0 +1,10 @@
+# Hello World - basic print and variables
+string name = "Lumen";
+int version = 1;
+float pi = 3.14159;
+bool active = true;
+
+print("Hello from", name);
+print("Version:", version);
+print("Pi is approximately:", pi);
+print("Active:", active);
