@@ -1,4 +1,4 @@
-# Simplified Lumen version (no functions, no arrays, no CAMB)
+
 
 float H0 = 67.0;
 float ombh2 = 0.022;

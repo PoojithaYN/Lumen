@@ -32,7 +32,22 @@ def ast_to_ir(ast):
             ir.append(IRNode('filter', dataset=stmt.dataset, cond=ir_expr(stmt.cond)))
         elif isinstance(stmt, CoordDecl):
             ir.append(IRNode('coord', name=stmt.name, ra=ir_expr(stmt.ra), dec=ir_expr(stmt.dec)))
-        # Add more as needed
+        elif isinstance(stmt, IfStmt):
+            ir.append(IRNode('if', cond=ir_expr(stmt.cond), then_body=ast_to_ir(stmt.then_body), else_body=ast_to_ir(stmt.else_body) if stmt.else_body else None))
+        elif isinstance(stmt, WhileStmt):
+            ir.append(IRNode('while', cond=ir_expr(stmt.cond), body=ast_to_ir(stmt.body)))
+        elif isinstance(stmt, ContinueStmt):
+            ir.append(IRNode('continue'))
+        elif isinstance(stmt, BreakStmt):
+            ir.append(IRNode('break'))
+        elif isinstance(stmt, ArrayDecl):
+            ir.append(IRNode('array_decl', name=stmt.name, elem_type=stmt.elem_type, init=[ir_expr(x) for x in stmt.init_list]))
+
+        elif isinstance(stmt, ArrayAccess):
+            ir.append(IRNode('array_access', array=stmt.array, index=ir_expr(stmt.index)))
+        elif isinstance(expr, MemberAccess):
+            ir.append(IRNode('member_access', expr=ir_expr(expr.expr), member=expr.member)) 
+    # Add more as needed
     return ir
 
 def ir_expr(expr):

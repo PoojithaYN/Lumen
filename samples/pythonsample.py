@@ -1,5 +1,3 @@
-cd ~/planck
-python << 'EOF'
 import camb
 import numpy as np
 print("Testing if grey body affects C_l at FIXED H0:")
@@ -20,7 +18,4 @@ if diff_percent > 0.1:
     print("\n✓ Grey body IS affecting the physics (C_l changed)")
     print("Issue: cosmomc_theta solver might not be seeing the change")
 else:
-    print("\n❌ Grey body NOT affecting physics at all")
-EOF
- 
-can you check if this python code can be convereted into lumen?
+    print("\n Grey body NOT affecting physics at all"

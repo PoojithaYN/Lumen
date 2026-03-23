@@ -1,12 +1,13 @@
 # parser.py
 import ply.yacc as yacc
-from lexer import tokens, lexer   # import your existing lexer & tokens
 
+from lexer import tokens, lexer   # import your existing lexer & tokens
+from ast_nodes import * # ← ADD THIS LINE
 # Import AST nodes
 from ast_nodes import (
-    Program, VarDecl, Assignment, IfStmt, WhileStmt, ForStmt, FuncDef, Call,
+    Program, VarDecl, Assignment, IfStmt, WhileStmt, ForStmt, FuncDef, Call, ContinueStmt, BreakStmt,
     PrintStmt, LoadDataset, FilterStmt, CoordDecl,
-    BinOp, UnaryOp, Number, StringLit, BoolLit, Var, UnitExpr, RaDec
+    BinOp, UnaryOp, Number, StringLit, BoolLit, Var, UnitExpr, RaDec, ArrayDecl,ArrayAccess, MemberAccess
 )
 
 # Precedence and associativity (needed for expressions)
@@ -74,6 +75,15 @@ def p_while(p):
 def p_for(p):
     '''statement : FOR LPAREN ID IN expression RPAREN LBRACE statements RBRACE'''
     p[0] = ForStmt(p[3], p[5], p[8])
+#continue
+def p_continue(p):
+    '''statement : CONTINUE SEMI'''
+    p[0] = ContinueStmt()
+
+#break
+def p_break(p):
+    '''statement : BREAK SEMI'''
+    p[0] = BreakStmt()
 
 # Function definition (simplified - params as list of strings)
 def p_func_def(p):
@@ -81,6 +91,19 @@ def p_func_def(p):
                  | DEF ID LPAREN param_list_opt RPAREN LBRACE statements return_stmt RBRACE'''
     ret = p[8] if len(p) == 10 else None
     p[0] = FuncDef(p[2], p[4], p[7], ret)
+
+def p_array_decl(p):
+    '''statement : type LBRACKET RBRACKET ID ASSIGN LBRACKET arg_list_opt RBRACKET SEMI'''
+    p[0] = ArrayDecl(p[1], p[4], p[7] if p[7] else [])
+
+# Array access: id[expr]
+def p_array_access(p):
+    '''expression : ID LBRACKET expression RBRACKET'''
+    p[0] = ArrayAccess(p[1], p[3])
+
+def p_member_access(p):
+    '''expression : expression DOT ID'''
+    p[0] = MemberAccess(p[1], p[3])  # expr . id (e.g., distances.length)
 
 def p_param_list_opt(p):
     '''param_list_opt : param_list

@@ -34,9 +34,29 @@ class ForStmt(Node):
     def __init__(self, var, iterable, body):
         super().__init__('For', var=var, iterable=iterable, body=body)
 
+class ContinueStmt(Node):
+    def __init__(self):
+        super().__init__('ContinueStmt')
+
+class BreakStmt(Node):
+    def __init__(self):
+        super().__init__('BreakStmt')
+
 class FuncDef(Node):
     def __init__(self, name, params, body, ret=None):
         super().__init__('FuncDef', name=name, params=params, body=body, return_=ret)
+
+class ArrayDecl(Node):
+    def __init__(self, elem_type, name, init_list):
+        super().__init__('ArrayDecl', elem_type=elem_type, name=name, init_list=init_list or [])
+
+class ArrayAccess(Node):
+    def __init__(self, array, index):
+        super().__init__('ArrayAccess', array=array, index=index)
+
+class MemberAccess(Node):
+    def __init__(self, expr, member):
+        super().__init__('MemberAccess', expr=expr, member=member)
 
 class Call(Node):
     def __init__(self, name, args):

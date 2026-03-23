@@ -1,0 +1,10 @@
+float[] magnitudes = [3.5, 6.2, 4.8, 7.1];
+
+# Simple "filter" simulation using loop
+int i = 0;
+while (i < 4) {
+    if (magnitudes[i] < 5.0) {
+        print("Bright star magnitude:", magnitudes[i]);
+    }
+    i = i + 1;
+}

@@ -9,14 +9,16 @@ def generate_python(ir):
         "import pandas as pd",
         "",
     ]
-    print("  Codegen: Processing", len(ir), "IR instructions")
+    print(" Codegen: Processing", len(ir), "IR instructions")
+    
     if not ir:
         code.append('print("No statements to execute (empty program)")')
-
+    
     var_types = {}  # simple tracking
-
+    
     for instr in ir:
-        print(f"    → Generating code for: {instr.op}")
+        print(f" → Generating code for: {instr.op}")
+        
         if instr.op == 'declare':
             code.append(f"{instr.name} = None  # {instr.type}")
             var_types[instr.name] = instr.type
@@ -49,8 +51,50 @@ def generate_python(ir):
             right = ir_to_code(instr.right, var_types)
             code.append(f"({left} {instr.op} {right})")
         
-        # Add more ops as needed
+        elif instr.op == 'if':
+            cond_code = ir_to_code(instr.cond, var_types)
+            code.append(f"if {cond_code}:")
+            # then body (indent)
+            for sub in instr.then_body:
+                code.append("    " + ir_to_code(sub, var_types))
+            if instr.else_body:
+                code.append("else:")
+                for sub in instr.else_body:
+                    code.append("    " + ir_to_code(sub, var_types))
+        
+        elif instr.op == 'while':
+            cond_code = ir_to_code(instr.cond, var_types)
+            code.append(f"while {cond_code}:")
+            for sub in instr.body:
+                code.append("    " + ir_to_code(sub, var_types))
+        
+        elif instr.op == 'continue':
+            code.append("    continue")
+        
+        elif instr.op == 'break':
+            code.append("    break")
+        elif instr.op == 'array_decl':
+            init_codes = [ir_to_code(x, var_types) for x in instr.init]
+            code.append(f"{instr.name} = [{', '.join(init_codes)}]")
 
+        elif instr.op == 'array_access':
+            array_code = ir_to_code(instr.array, var_types)
+            index_code = ir_to_code(instr.index, var_types)
+            code.append(f"{array_code}[{index_code}]")
+        elif instr.op == 'array_decl':
+            init_codes = [ir_to_code(x, var_types) for x in instr.init]
+            code.append(f"{instr.name} = [{', '.join(init_codes)}]")
+
+        elif instr.op == 'array_access':
+            array_code = ir_to_code(instr.array, var_types)
+            index_code = ir_to_code(instr.index, var_types)
+            code.append(f"{array_code}[{index_code}]")
+        elif ir_node.op == 'member_access':
+            expr_code = ir_to_code(ir_node.expr, var_types)
+            return f"{expr_code}.{ir_node.member}"
+        
+        # Add more ops as needed
+    
     return "\n".join(code)
 
 def ir_to_code(ir_node, var_types):

@@ -5,9 +5,10 @@ tokens = [
     'ID', 'NUMBER', 'STRING',
     'PLUS', 'MINUS', 'TIMES', 'DIVIDE',
     'EQ', 'NEQ', 'LT', 'GT', 'LE', 'GE',
-
+    'DOT',
     'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE',
     'SEMI', 'ASSIGN', 'COMMA',
+    'LBRACKET', 'RBRACKET',
     'IN',
 ]
 
@@ -21,6 +22,9 @@ reserved = {
   
     'and': 'AND', 'or': 'OR', 'not': 'NOT',
     'true': 'TRUE', 'false': 'FALSE',
+     'while': 'WHILE',
+    'continue': 'CONTINUE',
+    'break': 'BREAK',
     # Astronomy units
     'km': 'UNIT_KM', 's': 'UNIT_S', 'deg': 'UNIT_DEG', 'arcsec': 'UNIT_ARCSEC',
     'pc': 'UNIT_PC', 'Jy': 'UNIT_JY', 'mag': 'UNIT_MAG'
@@ -45,6 +49,9 @@ t_RBRACE  = r'\}'
 t_SEMI    = r';'
 t_ASSIGN  = r'='
 t_COMMA   = r','
+t_LBRACKET = r'\['
+t_RBRACKET = r'\]'
+t_DOT = r'\.'
 
 def t_NUMBER(t):
     r'\d+(\.\d*)?|\.\d+'
