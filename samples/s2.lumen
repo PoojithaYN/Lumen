@@ -1,0 +1,113 @@
+# algorithms
+# Demonstrates: recursion, nested loops, boolean logic, switch,
+# functions calling functions, try/catch, complex expressions
+
+const int PRIME_LIMIT = 20;
+
+def fib(int n) {
+    if (n <= 0) { return 0; }
+    if (n == 1) { return 1; }
+    return fib(n - 1) + fib(n - 2);
+}
+
+print("Fibonacci sequence:");
+int fi = 0;
+while (fi < 8) {
+    print("fib(", fi, ") =", fib(fi));
+    fi = fi + 1;
+}
+
+def factorial(int n) {
+    if (n <= 1) { return 1; }
+    return n * factorial(n - 1);
+}
+
+print("Factorials:");
+int ni = 1;
+while (ni <= 7) {
+    print(ni, "! =", factorial(ni));
+    ni = ni + 1;
+}
+
+def power(int base, int exp) {
+    if (exp == 0) { return 1; }
+    return base * power(base, exp - 1);
+}
+
+print("Powers of 2:");
+int pw = 0;
+while (pw <= 8) {
+    print("2^", pw, "=", power(2, pw));
+    pw = pw + 1;
+}
+
+def is_prime(int n) {
+    if (n < 2)  { return 0; }
+    if (n == 2) { return 1; }
+    int d = 2;
+    while (d * d <= n) {
+        int rem = n - (n / d) * d;
+        if (rem == 0) { return 0; }
+        d = d + 1;
+    }
+    return 1;
+}
+
+print("Primes up to 20:");
+int pi = 2;
+while (pi <= PRIME_LIMIT) {
+    if (is_prime(pi) == 1) {
+        print(pi);
+    }
+    pi = pi + 1;
+}
+
+def safe_div(float a, float b) {
+    if (b == 0.0) {
+        throw "Division by zero";
+    }
+    return a / b;
+}
+
+try {
+    float r1 = safe_div(10.0, 4.0);
+    print("10 / 4 =", r1);
+    float r2 = safe_div(7.0, 0.0);
+    print("should not print");
+} catch (err) {
+    print("Caught:", err);
+} finally {
+    print("Division block done");
+}
+
+print("Multiplication table 3x3:");
+int row = 1;
+while (row <= 3) {
+    int col = 1;
+    while (col <= 3) {
+        int product = row * col;
+        print(row, "x", col, "=", product);
+        col = col + 1;
+    }
+    row = row + 1;
+}
+
+def classify_number(int n) {
+    if (n < 0)  { return 1; }
+    if (n == 0) { return 2; }
+    if (is_prime(n) == 1) { return 3; }
+    return 4;
+}
+
+print("Number classifications:");
+int cn = 0;
+while (cn <= 6) {
+    int cls = classify_number(cn);
+    switch (cls) {
+        case 1: { print(cn, "is negative"); }
+        case 2: { print(cn, "is zero"); }
+        case 3: { print(cn, "is prime"); }
+        case 4: { print(cn, "is composite"); }
+    }
+    cn = cn + 1;
+}
