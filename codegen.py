@@ -1,186 +1,256 @@
-# codegen.py
+# codegen.py  –  Lumen → Python backend
+# Handles: all core constructs + struct/class/pointer/ref/switch/try/throw/SSA
+
 from ir import IRNode
 
 
 def generate_python(ir):
-    code = [
+    lines = [
+        "# ── Lumen generated code ──────────────────────────────────────",
         "from astropy import units as u",
         "from astropy.coordinates import SkyCoord",
         "import numpy as np",
         "import pandas as pd",
+        "import sys",
         "",
     ]
-    print("  Codegen: Processing", len(ir), "IR instructions")
     if not ir:
-        code.append('print("No statements to execute (empty program)")')
-
+        lines.append('print("(empty program)")')
     var_types = {}
-
     for instr in ir:
-        print(f"    → Generating code for: {instr.op}")
-        gen_instr(instr, code, var_types, indent=0)
-
-    return "\n".join(code)
+        _gen(instr, lines, var_types, indent=0)
+    return "\n".join(lines)
 
 
-def gen_instr(instr, code, var_types, indent=0):
+def _gen(instr, lines, var_types, indent):
     pad = "    " * indent
 
-    if instr.op == 'declare':
-        code.append(f"{pad}{instr.name} = None  # {instr.type}")
+    op = instr.op
+
+    if op == 'declare':
+        lines.append(f"{pad}{instr.name} = None  # {instr.type}")
         var_types[instr.name] = instr.type
 
-    elif instr.op == 'assign':
-        code.append(f"{pad}{instr.name} = {ir_to_code(instr.value, var_types)}")
+    elif op == 'assign':
+        lines.append(f"{pad}{instr.name} = {_e(instr.value)}")
 
-    elif instr.op == 'print':
-        args = ', '.join(ir_to_code(e, var_types) for e in instr.exprs)
-        code.append(f"{pad}print({args})")
+    elif op == 'ptr_decl':
+        lines.append(f"{pad}{instr.name} = {_e(instr.value)}  # pointer ({instr.base_type}*)")
 
-    elif instr.op == 'input':
-        code.append(f"{pad}{instr.var_name} = input()")
+    elif op == 'ref_decl':
+        lines.append(f"{pad}{instr.name} = {_e(instr.target)}  # reference ({instr.base_type}&)")
 
-    elif instr.op == 'array_decl':
-        init = ', '.join(ir_to_code(x, var_types) for x in instr.init)
-        code.append(f"{pad}{instr.name} = [{init}]")
+    elif op == 'deref_assign':
+        lines.append(f"{pad}# *{instr.pointer} = {_e(instr.value)}  (pointer write)")
+        lines.append(f"{pad}{instr.pointer} = {_e(instr.value)}")
 
-    elif instr.op == 'array_access':
-        index = ir_to_code(instr.index, var_types)
-        code.append(f"{pad}{instr.array}[{index}]")
+    elif op == 'type_alias':
+        lines.append(f"{pad}# type alias: {instr.alias} = {instr.base}")
 
-    elif instr.op == 'member_access':
-        obj = ir_to_code(instr.expr, var_types)
-        if instr.member == 'length':
-            code.append(f"{pad}len({obj})")
-        else:
-            code.append(f"{pad}{obj}.{instr.member}")
+    elif op == 'print':
+        args = ', '.join(_e(e) for e in instr.exprs)
+        lines.append(f"{pad}print({args})")
 
-    elif instr.op == 'load_dataset':
-        code.append(f"{pad}{instr.name} = pd.read_csv('{instr.file}')")
+    elif op == 'input':
+        lines.append(f"{pad}{instr.var_name} = input()")
 
-    elif instr.op == 'filter':
-        cond_code = ir_to_code(instr.cond, var_types)
-        code.append(f"{pad}{instr.dataset} = {instr.dataset}[{cond_code}]")
+    elif op == 'array_decl':
+        init = ', '.join(_e(x) for x in instr.init)
+        lines.append(f"{pad}{instr.name} = [{init}]")
 
-    elif instr.op == 'coord':
-        ra_code  = ir_to_code(instr.ra,  var_types)
-        dec_code = ir_to_code(instr.dec, var_types)
-        code.append(f"{pad}{instr.name} = SkyCoord(ra={ra_code}*u.deg, dec={dec_code}*u.deg, frame='icrs')")
+    elif op == 'array_access':
+        lines.append(f"{pad}{instr.array}[{_e(instr.index)}]")
 
-    elif instr.op == 'if':
-        cond_code = ir_to_code(instr.cond, var_types)
-        code.append(f"{pad}if {cond_code}:")
+    elif op == 'member_access':
+        obj = _e(instr.expr)
+        attr = f"len({obj})" if instr.member == 'length' else f"{obj}.{instr.member}"
+        lines.append(f"{pad}{attr}")
+
+    elif op == 'load_dataset':
+        lines.append(f"{pad}{instr.name} = pd.read_csv('{instr.file}')")
+
+    elif op == 'filter':
+        lines.append(f"{pad}{instr.dataset} = {instr.dataset}[{_e(instr.cond)}]")
+
+    elif op == 'coord':
+        lines.append(f"{pad}{instr.name} = SkyCoord("
+                     f"ra={_e(instr.ra)}*u.deg, dec={_e(instr.dec)}*u.deg, frame='icrs')")
+
+    elif op == 'if':
+        lines.append(f"{pad}if {_e(instr.cond)}:")
         if instr.then_body:
-            for sub in instr.then_body:
-                gen_instr(sub, code, var_types, indent + 1)
+            for sub in instr.then_body: _gen(sub, lines, var_types, indent+1)
         else:
-            code.append(f"{pad}    pass")
+            lines.append(f"{pad}    pass")
         if instr.else_body:
-            code.append(f"{pad}else:")
-            for sub in instr.else_body:
-                gen_instr(sub, code, var_types, indent + 1)
+            lines.append(f"{pad}else:")
+            for sub in instr.else_body: _gen(sub, lines, var_types, indent+1)
 
-    elif instr.op == 'while':
-        cond_code = ir_to_code(instr.cond, var_types)
-        code.append(f"{pad}while {cond_code}:")
+    elif op == 'switch':
+        # Emitted as if/elif/else chain
+        first = True
+        for val_node, body in instr.cases:
+            kw = 'if' if first else 'elif'
+            lines.append(f"{pad}{kw} {_e(instr.expr)} == {_e(val_node)}:")
+            if body:
+                for sub in body: _gen(sub, lines, var_types, indent+1)
+            else:
+                lines.append(f"{pad}    pass")
+            first = False
+        if instr.default:
+            lines.append(f"{pad}else:")
+            for sub in instr.default: _gen(sub, lines, var_types, indent+1)
+
+    elif op == 'while':
+        lines.append(f"{pad}while {_e(instr.cond)}:")
         if instr.body:
-            for sub in instr.body:
-                gen_instr(sub, code, var_types, indent + 1)
+            for sub in instr.body: _gen(sub, lines, var_types, indent+1)
         else:
-            code.append(f"{pad}    pass")
+            lines.append(f"{pad}    pass")
 
-    elif instr.op == 'for':
-        iterable = ir_to_code(instr.iterable, var_types)
-        code.append(f"{pad}for {instr.var} in {iterable}:")
+    elif op == 'for':
+        lines.append(f"{pad}for {instr.var} in {_e(instr.iterable)}:")
         if instr.body:
-            for sub in instr.body:
-                gen_instr(sub, code, var_types, indent + 1)
+            for sub in instr.body: _gen(sub, lines, var_types, indent+1)
         else:
-            code.append(f"{pad}    pass")
+            lines.append(f"{pad}    pass")
 
-    elif instr.op == 'continue':
-        code.append(f"{pad}continue")
+    elif op == 'continue':
+        lines.append(f"{pad}continue")
 
-    elif instr.op == 'break':
-        code.append(f"{pad}break")
+    elif op == 'break':
+        lines.append(f"{pad}break")
 
-    elif instr.op == 'funcdef':
-        params = ', '.join(instr.params)
-        code.append(f"{pad}def {instr.name}({params}):")
+    elif op == 'return':
+        v = _e(instr.value) if instr.value else 'None'
+        lines.append(f"{pad}return {v}")
+
+    elif op == 'throw':
+        lines.append(f"{pad}raise Exception({_e(instr.value)})")
+
+    elif op == 'try':
+        lines.append(f"{pad}try:")
+        if instr.try_body:
+            for sub in instr.try_body: _gen(sub, lines, var_types, indent+1)
+        else:
+            lines.append(f"{pad}    pass")
+        lines.append(f"{pad}except Exception as {instr.catch_var}:")
+        if instr.catch_body:
+            for sub in instr.catch_body: _gen(sub, lines, var_types, indent+1)
+        else:
+            lines.append(f"{pad}    pass")
+        if instr.finally_body:
+            lines.append(f"{pad}finally:")
+            for sub in instr.finally_body: _gen(sub, lines, var_types, indent+1)
+
+    elif op == 'struct_def':
+        # Emit as a Python dataclass-style class
+        lines.append(f"{pad}class {instr.name}:")
+        lines.append(f"{pad}    def __init__(self, {', '.join(n for _, n in instr.fields)}):")
+        for _, field in instr.fields:
+            lines.append(f"{pad}        self.{field} = {field}")
+        lines.append("")
+
+    elif op == 'class_def':
+        parent_str = f"({instr.parent})" if instr.parent else ""
+        lines.append(f"{pad}class {instr.name}{parent_str}:")
+        if instr.fields:
+            init_params = ', '.join(n for _, n in instr.fields)
+            lines.append(f"{pad}    def __init__(self, {init_params}):")
+            for _, field in instr.fields:
+                lines.append(f"{pad}        self.{field} = {field}")
+        for m_name, m_params, m_body, m_ret in instr.methods:
+            p_names = [p.name if isinstance(p, type) else p for p in m_params]
+            params_str = ', '.join(['self'] + [p if isinstance(p, str) else p for p in p_names])
+            lines.append(f"{pad}    def {m_name}({params_str}):")
+            if m_body:
+                sub_lines = []
+                for sub in m_body: _gen(sub, sub_lines, var_types, indent+2)
+                lines.extend(sub_lines)
+            else:
+                lines.append(f"{pad}        pass")
+            if m_ret:
+                lines.append(f"{pad}        return {_e(m_ret)}")
+        lines.append("")
+
+    elif op == 'funcdef':
+        modes = getattr(instr, 'param_modes', ['val'] * len(instr.params))
+        param_strs = []
+        for name, mode in zip(instr.params, modes):
+            if mode == 'ref':
+                param_strs.append(name)        # Python passes objects by ref anyway
+            elif mode == 'out':
+                param_strs.append(name)
+            elif mode == 'const':
+                param_strs.append(name)        # enforced by convention, not syntax
+            else:
+                param_strs.append(name)
+        lines.append(f"{pad}def {instr.name}({', '.join(param_strs)}):")
         if instr.body:
-            for sub in instr.body:
-                gen_instr(sub, code, var_types, indent + 1)
+            for sub in instr.body: _gen(sub, lines, var_types, indent+1)
         else:
-            code.append(f"{pad}    pass")
+            lines.append(f"{pad}    pass")
         if instr.ret:
-            code.append(f"{pad}    return {ir_to_code(instr.ret, var_types)}")
+            lines.append(f"{pad}    return {_e(instr.ret)}")
+        lines.append("")
 
-    elif instr.op == 'call':
-        args = ', '.join(ir_to_code(a, var_types) for a in instr.args)
-        code.append(f"{pad}{instr.name}({args})")
+    elif op == 'call':
+        args = ', '.join(_e(a) for a in instr.args)
+        lines.append(f"{pad}{instr.name}({args})")
 
     else:
-        code.append(f"{pad}pass  # unhandled op: {instr.op}")
+        lines.append(f"{pad}pass  # unhandled: {op}")
 
 
-def ir_to_code(ir_node, var_types=None):
-    if var_types is None:
-        var_types = {}
+def _e(node, var_types=None):
+    """Render an expression IRNode to a Python string."""
+    if node is None:
+        return 'None'
+    op = node.op
 
-    if ir_node.op == 'number':
-        v = ir_node.value
-        # Cast whole floats to int so array indices are 0 not 0.0
+    if op == 'number':
+        v = node.value
         return str(int(v)) if isinstance(v, float) and v.is_integer() else str(v)
-
-    if ir_node.op == 'string':
-        return repr(ir_node.value)
-
-    if ir_node.op == 'bool':
-        return 'True' if ir_node.value else 'False'
-
-    if ir_node.op == 'var':
-        return ir_node.name
-
-    if ir_node.op == 'unit':
-        if ' ' in ir_node.unit:
-            parts = ir_node.unit.split()
-            return f"{ir_node.value} * u.{parts[0]} / u.{parts[1]}"
-        return f"{ir_node.value} * u.{ir_node.unit}"
-
-    if ir_node.op == 'binop':
-        left  = ir_to_code(ir_node.left,  var_types)
-        right = ir_to_code(ir_node.right, var_types)
-        op_map = {
-            '==': '==', '!=': '!=',
-            '&&': 'and', '||': 'or',
-            'and': 'and', 'or': 'or',
-            '^': '**'
-        }
-        #Use ir_node.operator (the symbol) not ir_node.op (which is always 'binop')
-        op = op_map.get(ir_node.operator, ir_node.operator)
-        return f"({left} {op} {right})"
-
-    if ir_node.op == 'unaryop':
-        expr = ir_to_code(ir_node.expr, var_types)
-        op_map = {'not': 'not ', '-': '-'}
-        #Use ir_node.operator here too
-        return f"{op_map.get(ir_node.operator, ir_node.operator)}{expr}"
-
-    if ir_node.op == 'member_access':
-        obj = ir_to_code(ir_node.expr, var_types)
-        if ir_node.member == 'length':
-            return f"len({obj})"
-        return f"{obj}.{ir_node.member}"
-
-    if ir_node.op == 'array_access':
-        index = ir_to_code(ir_node.index, var_types)
-        return f"{ir_node.array}[{index}]"
-
-    if ir_node.op == 'call':
-        args = ', '.join(ir_to_code(a, var_types) for a in ir_node.args)
-        return f"{ir_node.name}({args})"
-
-    if ir_node.op == 'unknown_expr':
-        return f"None  # unknown: {ir_node.expr!r}"
-
-    return f"None  # unhandled: {ir_node.op}"
+    if op == 'string':
+        return repr(node.value)
+    if op == 'bool':
+        return 'True' if node.value else 'False'
+    if op == 'var':
+        return node.name
+    if op == 'unit':
+        if ' ' in node.unit:
+            parts = node.unit.split()
+            return f"{node.value} * u.{parts[0]} / u.{parts[1]}"
+        return f"{node.value} * u.{node.unit}"
+    if op == 'binop':
+        l = _e(node.left)
+        r = _e(node.right)
+        op_map = {'==': '==', '!=': '!=', '&&': 'and', '||': 'or',
+                  'and': 'and', 'or': 'or', '^': '**'}
+        o = op_map.get(node.operator, node.operator)
+        return f"({l} {o} {r})"
+    if op == 'unaryop':
+        e = _e(node.expr)
+        m = {'not': 'not ', '-': '-'}
+        return f"{m.get(node.operator, node.operator)}{e}"
+    if op == 'member_access':
+        obj = _e(node.expr)
+        return f"len({obj})" if node.member == 'length' else f"{obj}.{node.member}"
+    if op == 'array_access':
+        return f"{node.array}[{_e(node.index)}]"
+    if op == 'call':
+        args = ', '.join(_e(a) for a in node.args)
+        return f"{node.name}({args})"
+    if op == 'new':
+        args = ', '.join(_e(a) for a in node.args)
+        return f"{node.class_name}({args})"
+    if op == 'addr_of':
+        return f"{node.name}  # &{node.name}"
+    if op == 'deref':
+        return f"{_e(node.expr)}  # deref"
+    if op == 'struct_lit':
+        args = ', '.join(f"{_e(v)}" for _, v in node.fields)
+        return f"{node.struct_name}({args})"
+    if op == 'unknown_expr':
+        return f"None  # unknown: {node.expr!r}"
+    return f"None  # unhandled expr: {op}"
