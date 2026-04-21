@@ -1,0 +1,42 @@
+def celsius_to_fahrenheit(float c) {
+    return c * 9.0 / 5.0 + 32.0;
+}
+
+def fahrenheit_to_celsius(float f) {
+    return (f - 32.0) * 5.0 / 9.0;
+}
+
+def celsius_to_kelvin(float c) {
+    return c + 273.15;
+}
+
+def kelvin_to_celsius(float k) {
+    return k - 273.15;
+}
+
+def classify_temp(float c) {
+    if (c < 0.0)   { print("  -> Freezing"); }
+    if (c < 10.0)  { if (c >= 0.0)  { print("  -> Cold");      } }
+    if (c < 20.0)  { if (c >= 10.0) { print("  -> Cool");      } }
+    if (c < 30.0)  { if (c >= 20.0) { print("  -> Warm");      } }
+    if (c >= 30.0) { print("  -> Hot");       }
+    return 0;
+}
+
+float[] temps_c = [0.0, 20.0, 37.0, 100.0, -40.0, 15.0];
+int N = 6;
+int i = 0;
+while (i < N) {
+    float c = temps_c[i];
+    float f = celsius_to_fahrenheit(c);
+    float k = celsius_to_kelvin(c);
+    print("Celsius:", c);
+    print("  Fahrenheit:", f);
+    print("  Kelvin    :", k);
+    int dummy = classify_temp(c);
+    i = i + 1;
+}
+
+print("Boiling point check:", celsius_to_fahrenheit(100.0), "F");
+print("Body temperature   :", celsius_to_kelvin(37.0), "K");
+print("Abs zero in C      :", kelvin_to_celsius(0.0), "C");

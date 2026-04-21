@@ -1,0 +1,35 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\narray_decl(name='scores', elem_type='int\nassign(name='N', value=number(value=10.0\nassign(name='pass_count', value=number(v\nassign(name='fail_count', value=number(v\n...+1 more\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<', left=var(\nlive: {fail_count,i,pass_count}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1\nprint(exprs=[string(value='Pass:'), var(\nassign(name='__t1', value=array_access(a\nassign(name='__t1', value=var(name='__t1\nassign(name='__t1', value=var(name='__t1\n...+15 more\nlive: {fail_count,pass_count}"];
+  "while_cond_5" [label="while_cond_5\nwhile(cond=binop(operator='<', left=var(\nlive: {j,max_score,min_score}"];
+  "while_body_5" [label="while_body_5"];
+  "while_exit_5" [label="while_exit_5\nprint(exprs=[string(value='Max score:'),\nprint(exprs=[string(value='Min score:'),\nassign(name='sum', value=number(value=0.\nassign(name='k', value=number(value=0.0)\nlive: {max_score,min_score}"];
+  "while_cond_8" [label="while_cond_8\nwhile(cond=binop(operator='<', left=var(\nlive: {k,sum}"];
+  "while_body_8" [label="while_body_8"];
+  "while_exit_8" [label="while_exit_8\nprint(exprs=[string(value='Average:'), b\nassign(name='above_80', value=number(val\nassign(name='m', value=number(value=0.0)\nlive: {sum}"];
+  "while_cond_11" [label="while_cond_11\nwhile(cond=binop(operator='<', left=var(\nlive: {above_80,m}"];
+  "while_body_11" [label="while_body_11"];
+  "while_exit_11" [label="while_exit_11\nprint(exprs=[string(value='Total above 8\nlive: {above_80}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "while_cond_5";
+  "while_cond_5" -> "while_body_5";
+  "while_cond_5" -> "while_exit_5";
+  "while_body_5" -> "while_cond_5";
+  "while_exit_5" -> "while_cond_8";
+  "while_cond_8" -> "while_body_8";
+  "while_cond_8" -> "while_exit_8";
+  "while_body_8" -> "while_cond_8";
+  "while_exit_8" -> "while_cond_11";
+  "while_cond_11" -> "while_body_11";
+  "while_cond_11" -> "while_exit_11";
+  "while_body_11" -> "while_cond_11";
+  "while_exit_11" -> "EXIT";
+}

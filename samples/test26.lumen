@@ -1,0 +1,34 @@
+float[] readings = [10.5, 12.3, 9.8, 11.1, 13.2, 10.0, 11.8, 12.5, 9.2, 11.6];
+int N = 10;
+
+float total = 0.0;
+float running_max = readings[0];
+float running_min = readings[0];
+int i = 0;
+while (i < N) {
+    total = total + readings[i];
+    if (readings[i] > running_max) { running_max = readings[i]; }
+    if (readings[i] < running_min) { running_min = readings[i]; }
+    i = i + 1;
+}
+
+float mean  = total / 10.0;
+float range = running_max - running_min;
+print("Sum   :", total);
+print("Mean  :", mean);
+print("Max   :", running_max);
+print("Min   :", running_min);
+print("Range :", range);
+
+float above_mean = 0.0;
+int above_count  = 0;
+int j = 0;
+while (j < N) {
+    if (readings[j] > mean) {
+        above_mean = above_mean + readings[j];
+        above_count = above_count + 1;
+    }
+    j = j + 1;
+}
+print("Values above mean:", above_count);
+print("Sum of above-mean values:", above_mean);

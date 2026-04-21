@@ -1,0 +1,21 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\narray_decl(name='readings', elem_type='f\nassign(name='N', value=number(value=10.0\nassign(name='total', value=number(value=\nassign(name='__t1', value=array_access(a\n...+17 more\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<', left=var(\nlive: {i,running_max,running_min,tota}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1\nassign(name='__t2', value=binop(operator\nassign(name='__t2', value=var(name='__t2\nassign(name='__t2', value=var(name='__t2\nassign(name='__t2', value=var(name='__t2\n...+36 more\nlive: {running_max,running_min,total}"];
+  "while_cond_5" [label="while_cond_5\nwhile(cond=binop(operator='<', left=var(\nlive: {above_count,above_mean,j}"];
+  "while_body_5" [label="while_body_5"];
+  "while_exit_5" [label="while_exit_5\nprint(exprs=[string(value='Values above \nprint(exprs=[string(value='Sum of above-\nlive: {above_count,above_mean}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "while_cond_5";
+  "while_cond_5" -> "while_body_5";
+  "while_cond_5" -> "while_exit_5";
+  "while_body_5" -> "while_cond_5";
+  "while_exit_5" -> "EXIT";
+}

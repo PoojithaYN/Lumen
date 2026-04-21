@@ -1,0 +1,33 @@
+def countdown_print(int n) {
+    if (n < 0) { return 0; }
+    print(n);
+    return countdown_print(n - 1);
+}
+
+def sum_recursive(int n) {
+    if (n <= 0) { return 0; }
+    return n + sum_recursive(n - 1);
+}
+
+def product_recursive(int n) {
+    if (n <= 1) { return 1; }
+    return n * product_recursive(n - 1);
+}
+
+def count_even(int n) {
+    if (n <= 0) { return 0; }
+    int is_even = n - (n / 2) * 2;
+    if (is_even == 0) {
+        return 1 + count_even(n - 1);
+    }
+    return count_even(n - 1);
+}
+
+print("Countdown from 5:");
+int d = countdown_print(5);
+
+print("Sum 1 to 10:", sum_recursive(10));
+print("Sum 1 to 20:", sum_recursive(20));
+print("10!:", product_recursive(10));
+print("Even numbers in 1-20:", count_even(20));
+print("Even numbers in 1-15:", count_even(15));

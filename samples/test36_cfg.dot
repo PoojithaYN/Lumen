@@ -1,0 +1,21 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nfuncdef(name='check_positive', params=['\nfuncdef(name='check_range', params=['x',\nfuncdef(name='safe_sqrt_approx', params=\narray_decl(name='test_vals', elem_type='\n...+2 more\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<', left=var(\nlive: {i}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1\nprint(exprs=[string(value='--- Range che\narray_decl(name='range_tests', elem_type\nassign(name='M', value=number(value=6.0)\nassign(name='j', value=number(value=0.0)\nlive: {}"];
+  "while_cond_5" [label="while_cond_5\nwhile(cond=binop(operator='<', left=var(\nlive: {j}"];
+  "while_body_5" [label="while_body_5"];
+  "while_exit_5" [label="while_exit_5"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "while_cond_5";
+  "while_cond_5" -> "while_body_5";
+  "while_cond_5" -> "while_exit_5";
+  "while_body_5" -> "while_cond_5";
+  "while_exit_5" -> "EXIT";
+}

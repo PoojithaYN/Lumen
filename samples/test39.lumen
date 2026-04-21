@@ -1,0 +1,36 @@
+def sqrt_newton(float x) {
+    if (x < 0.0) {
+        throw "Cannot sqrt negative";
+    }
+    if (x == 0.0) { return 0.0; }
+    float g = x / 2.0;
+    int i = 0;
+    while (i < 20) {
+        float g_new = (g + x / g) / 2.0;
+        float diff  = g_new - g;
+        if (diff < 0.0) { diff = diff - diff - diff; }
+        if (diff < 0.00001) { i = 20; }
+        g = g_new;
+        i = i + 1;
+    }
+    return g;
+}
+
+float[] vals = [1.0, 2.0, 4.0, 9.0, 16.0, 25.0, 49.0, 100.0, 144.0, 2.5];
+int N = 10;
+int i = 0;
+while (i < N) {
+    try {
+        float root = sqrt_newton(vals[i]);
+        print("sqrt(", vals[i], ") =", root);
+    } catch (err) {
+        print("Error:", err);
+    }
+    i = i + 1;
+}
+
+try {
+    float bad = sqrt_newton(-4.0);
+} catch (err) {
+    print("Caught:", err);
+}

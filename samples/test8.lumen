@@ -1,0 +1,25 @@
+def day_name(int d) {
+    switch (d) {
+        case 1: { print("Monday");    }
+        case 2: { print("Tuesday");   }
+        case 3: { print("Wednesday"); }
+        case 4: { print("Thursday");  }
+        case 5: { print("Friday");    }
+        case 6: { print("Saturday");  }
+        case 7: { print("Sunday");    }
+    }
+    return d;
+}
+
+int k = 1;
+while (k <= 7) {
+    int dummy = day_name(k);
+    k = k + 1;
+}
+
+int code = 2;
+switch (code) {
+    case 1: { print("Status: active");  }
+    case 2: { print("Status: idle");    }
+    case 3: { print("Status: offline"); }
+}

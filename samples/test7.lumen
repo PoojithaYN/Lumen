@@ -1,0 +1,22 @@
+print("Even numbers from 1 to 20:");
+int i = 1;
+while (i <= 20) {
+    int rem = i - (i / 2) * 2;
+    if (rem != 0) {
+        i = i + 1;
+        continue;
+    }
+    print(i);
+    i = i + 1;
+}
+
+print("First multiple of 7 above 50:");
+int n = 51;
+while (n < 200) {
+    int r = n - (n / 7) * 7;
+    if (r == 0) {
+        print(n);
+        break;
+    }
+    n = n + 1;
+}

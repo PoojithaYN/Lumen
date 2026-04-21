@@ -1,0 +1,21 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nassign(name='i', value=number(value=1.0)\nassign(name='total', value=number(value=\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<=', left=var\nlive: {i,total}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1\nprint(exprs=[string(value='Sum 1 to 10:'\nassign(name='countdown', value=number(va\nlive: {total}"];
+  "while_cond_5" [label="while_cond_5\nwhile(cond=binop(operator='>', left=var(\nlive: {countdown}"];
+  "while_body_5" [label="while_body_5"];
+  "while_exit_5" [label="while_exit_5\nprint(exprs=[string(value='Liftoff!')], \nlive: {}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "while_cond_5";
+  "while_cond_5" -> "while_body_5";
+  "while_cond_5" -> "while_exit_5";
+  "while_body_5" -> "while_cond_5";
+  "while_exit_5" -> "EXIT";
+}

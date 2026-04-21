@@ -1,0 +1,53 @@
+const float SUN_ABS_MAG = 4.83;
+
+float dist_sirius   = 2.64;
+float dist_proxima  = 1.295;
+float dist_vega     = 7.68;
+float dist_arcturus = 11.3;
+
+float mag_sirius   = 1.46;
+float mag_proxima  = 11.05;
+float mag_vega     = 0.03;
+float mag_arcturus = 1.14;
+
+def dist_modulus(float d) {
+    if (d < 2.0)  { return -1.5; }
+    if (d < 5.0)  { return 1.0;  }
+    if (d < 10.0) { return 3.5;  }
+    if (d < 20.0) { return 6.0;  }
+    return 8.0;
+}
+
+def abs_mag(float m, float d) {
+    float mu = dist_modulus(d);
+    return m - mu;
+}
+
+print("=== Stellar Magnitudes ===");
+print("Sirius    app:", mag_sirius,   "abs:", abs_mag(mag_sirius,   dist_sirius));
+print("Proxima   app:", mag_proxima,  "abs:", abs_mag(mag_proxima,  dist_proxima));
+print("Vega      app:", mag_vega,     "abs:", abs_mag(mag_vega,     dist_vega));
+print("Arcturus  app:", mag_arcturus, "abs:", abs_mag(mag_arcturus, dist_arcturus));
+
+float nearest = dist_sirius;
+string nearest_name = "Sirius";
+if (dist_proxima < nearest) {
+    nearest = dist_proxima;
+    nearest_name = "Proxima";
+}
+if (dist_vega < nearest) {
+    nearest = dist_vega;
+    nearest_name = "Vega";
+}
+if (dist_arcturus < nearest) {
+    nearest = dist_arcturus;
+    nearest_name = "Arcturus";
+}
+print("Nearest:", nearest_name, "at", nearest, "pc");
+
+int nearby_count = 0;
+if (dist_sirius   < 10.0) { nearby_count = nearby_count + 1; }
+if (dist_proxima  < 10.0) { nearby_count = nearby_count + 1; }
+if (dist_vega     < 10.0) { nearby_count = nearby_count + 1; }
+if (dist_arcturus < 10.0) { nearby_count = nearby_count + 1; }
+print("Stars within 10 pc:", nearby_count);

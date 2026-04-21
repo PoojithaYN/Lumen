@@ -1,0 +1,38 @@
+int x = 100;
+print("Outer x:", x);
+
+if (x > 50) {
+    int y = 200;
+    print("Inside if: y =", y);
+    print("Inside if: x =", x);
+}
+
+int total = 0;
+int i = 0;
+while (i < 5) {
+    int sq = i * i;
+    total = total + sq;
+    i = i + 1;
+}
+print("Sum of squares 0-4:", total);
+
+def compute(int n) {
+    int result = n * n + n + 1;
+    int doubled = result * 2;
+    return doubled;
+}
+
+def compute2(int n) {
+    int result = n + 10;
+    return result;
+}
+
+def outer_fn(int val) {
+    int inner = compute(val) + compute2(val);
+    return inner;
+}
+
+print("compute(5)   =", compute(5));
+print("compute2(5)  =", compute2(5));
+print("outer_fn(3)  =", outer_fn(3));
+print("outer_fn(7)  =", outer_fn(7));

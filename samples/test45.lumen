@@ -1,0 +1,48 @@
+const float WEIGHT_HW   = 0.3;
+const float WEIGHT_MID  = 0.3;
+const float WEIGHT_FINAL = 0.4;
+
+def weighted_grade(float hw, float mid, float final) {
+    return hw * WEIGHT_HW + mid * WEIGHT_MID + final * WEIGHT_FINAL;
+}
+
+def letter_grade(float score) {
+    if (score >= 90.0) { return 1; }
+    if (score >= 80.0) { return 2; }
+    if (score >= 70.0) { return 3; }
+    if (score >= 60.0) { return 4; }
+    return 5;
+}
+
+def print_letter(int g) {
+    switch (g) {
+        case 1: { print("  Grade: A"); }
+        case 2: { print("  Grade: B"); }
+        case 3: { print("  Grade: C"); }
+        case 4: { print("  Grade: D"); }
+        case 5: { print("  Grade: F"); }
+    }
+    return g;
+}
+
+string[] students = ["Alice", "Bob", "Carol", "Dave", "Eve"];
+float[] hw_scores  = [95.0, 72.0, 88.0, 55.0, 100.0];
+float[] mid_scores = [88.0, 65.0, 91.0, 60.0, 94.0];
+float[] fin_scores = [92.0, 78.0, 85.0, 58.0, 97.0];
+int N = 5;
+
+float class_total = 0.0;
+int i = 0;
+while (i < N) {
+    float wg = weighted_grade(hw_scores[i], mid_scores[i], fin_scores[i]);
+    class_total = class_total + wg;
+    print("Student:", students[i]);
+    print("  HW:", hw_scores[i], "  Mid:", mid_scores[i], "  Final:", fin_scores[i]);
+    print("  Weighted avg:", wg);
+    int lg    = letter_grade(wg);
+    int dummy = print_letter(lg);
+    i = i + 1;
+}
+
+float class_avg = class_total / 5.0;
+print("Class average:", class_avg);

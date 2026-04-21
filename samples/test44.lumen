@@ -1,0 +1,42 @@
+const float C_LIGHT = 299792.0;
+
+def doppler_velocity(float lambda_obs, float lambda_rest) {
+    float delta = lambda_obs - lambda_rest;
+    return (delta / lambda_rest) * C_LIGHT;
+}
+
+float lambda_rest = 656.3;
+float[] observed_wl = [656.3, 656.5, 656.7, 656.4,
+                       656.1, 655.9, 656.2, 656.6,
+                       656.8, 656.3, 655.8, 656.0];
+int N = 12;
+
+print("=== Radial Velocity Analysis ===");
+print("Rest wavelength:", lambda_rest, "nm");
+print("");
+
+float max_rv   =  0.0;
+float min_rv   =  0.0;
+bool first     = true;
+
+int i = 0;
+while (i < N) {
+    float rv = doppler_velocity(observed_wl[i], lambda_rest);
+    print("Obs", i, ": lambda=", observed_wl[i], "nm  RV=", rv, "km/s");
+    if (first) {
+        max_rv = rv;
+        min_rv = rv;
+        first  = false;
+    } else {
+        if (rv > max_rv) { max_rv = rv; }
+        if (rv < min_rv) { min_rv = rv; }
+    }
+    i = i + 1;
+}
+
+float amplitude = max_rv - min_rv;
+print("");
+print("Max RV:", max_rv, "km/s");
+print("Min RV:", min_rv, "km/s");
+print("Semi-amplitude K:", amplitude / 2.0, "km/s");
+print("-> Planet presence:", amplitude > 10.0);

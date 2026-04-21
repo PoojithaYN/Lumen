@@ -1,0 +1,44 @@
+def digit_sum(int n) {
+    int total = 0;
+    int remaining = n;
+    while (remaining > 0) {
+        int d = remaining - (remaining / 10) * 10;
+        total = total + d;
+        remaining = remaining / 10;
+    }
+    return total;
+}
+
+def count_digits(int n) {
+    if (n == 0) { return 1; }
+    int count = 0;
+    int rem = n;
+    while (rem > 0) {
+        count = count + 1;
+        rem = rem / 10;
+    }
+    return count;
+}
+
+int[] numbers = [0, 5, 23, 145, 9999, 12345, 100000, 987654];
+int N = 8;
+int i = 0;
+while (i < N) {
+    int num    = numbers[i];
+    int dsum   = digit_sum(num);
+    int dcount = count_digits(num);
+    print("Number:", num, "  digits:", dcount, "  digit_sum:", dsum);
+    i = i + 1;
+}
+
+print("Numbers where digit_sum > 20:");
+int j = 100;
+int found = 0;
+while (j <= 999) {
+    if (digit_sum(j) > 20) {
+        print(j);
+        found = found + 1;
+    }
+    if (found >= 5) { break; }
+    j = j + 1;
+}

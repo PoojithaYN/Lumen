@@ -1,0 +1,43 @@
+int[] data = [64, 25, 12, 22, 11];
+int N = 5;
+
+def rsum(int idx, int n) {
+    if (idx >= n) { return 0; }
+    return data[idx] + rsum(idx + 1, n);
+}
+
+def rmax(int idx, int n, int cur) {
+    if (idx >= n) { return cur; }
+    int next = cur;
+    if (data[idx] > cur) { next = data[idx]; }
+    return rmax(idx + 1, n, next);
+}
+
+def rmin(int idx, int n, int cur) {
+    if (idx >= n) { return cur; }
+    int next = cur;
+    if (data[idx] < cur) { next = data[idx]; }
+    return rmin(idx + 1, n, next);
+}
+
+def count_above(int idx, int n, int thresh) {
+    if (idx >= n) { return 0; }
+    int here = 0;
+    if (data[idx] > thresh) { here = 1; }
+    return here + count_above(idx + 1, n, thresh);
+}
+
+def power(int base, int exp) {
+    if (exp == 0) { return 1; }
+    return base * power(base, exp - 1);
+}
+
+print("Data: 64 25 12 22 11");
+print("Sum       :", rsum(0, N));
+print("Max       :", rmax(1, N, data[0]));
+print("Min       :", rmin(1, N, data[0]));
+print("Above 20  :", count_above(0, N, 20));
+print("Above 10  :", count_above(0, N, 10));
+print("2^8  =", power(2, 8));
+print("2^10 =", power(2, 10));
+print("3^5  =", power(3, 5));

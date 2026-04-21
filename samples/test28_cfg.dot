@@ -1,0 +1,14 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nfuncdef(name='celsius_to_fahrenheit', pa\nfuncdef(name='fahrenheit_to_celsius', pa\nfuncdef(name='celsius_to_kelvin', params\nfuncdef(name='kelvin_to_celsius', params\n...+4 more\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<', left=var(\nlive: {i}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1\nprint(exprs=[string(value='Boiling point\nprint(exprs=[string(value='Body temperat\nprint(exprs=[string(value='Abs zero in C\nlive: {}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "EXIT";
+}

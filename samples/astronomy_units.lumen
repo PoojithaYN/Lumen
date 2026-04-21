@@ -16,3 +16,5 @@ float angle = 0.75 deg;
 float fine_angle = 30.0 arcsec;
 print("Observation angle:", angle);
 print("Fine angle:", fine_angle);
+print("",star_brightness+galaxy_distance
+ );

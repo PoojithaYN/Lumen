@@ -1,0 +1,47 @@
+def hr_class(float temp_k, float lum) {
+    if (temp_k > 25000.0) {
+        if (lum > 10000.0) { return 1; }
+        return 2;
+    }
+    if (temp_k > 7500.0) {
+        if (lum > 50.0) { return 3; }
+        return 4;
+    }
+    if (temp_k > 5200.0) {
+        if (lum > 5.0) { return 5; }
+        return 6;
+    }
+    if (temp_k > 3700.0) {
+        if (lum > 50.0) { return 7; }
+        return 8;
+    }
+    return 9;
+}
+
+def print_hr_class(int cls) {
+    switch (cls) {
+        case 1: { print("  -> O Supergiant");        }
+        case 2: { print("  -> O Main Sequence");      }
+        case 3: { print("  -> A/F Giant");            }
+        case 4: { print("  -> A Main Sequence");      }
+        case 5: { print("  -> G Giant / Subgiant");   }
+        case 6: { print("  -> G Main Sequence (Sun)"); }
+        case 7: { print("  -> K/M Giant");            }
+        case 8: { print("  -> K Main Sequence");      }
+        case 9: { print("  -> M Red Dwarf");          }
+    }
+    return cls;
+}
+
+string[] names  = ["Rigel",    "Sirius",   "Vega",    "Sun",    "Arcturus", "Proxima"];
+float[]  temps  = [12000.0,    9940.0,    9600.0,    5778.0,   4286.0,     3042.0];
+float[]  lums   = [66000.0,   25.4,       40.12,     1.0,      170.0,      0.0017];
+int N = 6;
+int i = 0;
+while (i < N) {
+    print("Star:", names[i]);
+    print("  Temp:", temps[i], "K   Lum:", lums[i], "L_sun");
+    int cls   = hr_class(temps[i], lums[i]);
+    int dummy = print_hr_class(cls);
+    i = i + 1;
+}

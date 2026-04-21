@@ -1,0 +1,14 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nfuncdef(name='sqrt_newton', params=['x']\narray_decl(name='vals', elem_type='float\nassign(name='N', value=number(value=10.0\nassign(name='i', value=number(value=0.0)\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<', left=var(\nlive: {i}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1\ntry(try_body=[assign(name='bad', value=c\nlive: {}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "EXIT";
+}

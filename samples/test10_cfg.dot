@@ -1,0 +1,14 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\ntype_alias(alias='Count', base='int')\ntype_alias(alias='Score', base='float')\nassign(name='MAX_ITEMS', value=number(va\nassign(name='PI', value=number(value=3.1\n...+7 more\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<', left=var(\nlive: {counter}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "EXIT";
+}

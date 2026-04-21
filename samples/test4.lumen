@@ -1,0 +1,15 @@
+int[] primes = [2, 3, 5, 7, 11];
+int idx = 0;
+while (idx < 5) {
+    print("prime[", idx, "] =", primes[idx]);
+    idx = idx + 1;
+}
+
+float[] temps = [36.5, 37.1, 36.8, 37.3, 36.9];
+float sum = 0.0;
+int n = 0;
+while (n < 5) {
+    sum = sum + temps[n];
+    n = n + 1;
+}
+print("Sum of temps:", sum);

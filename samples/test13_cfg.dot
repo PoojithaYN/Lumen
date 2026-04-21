@@ -1,0 +1,7 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nstruct_def(name='Point', fields=[('float\nstruct_def(name='Rectangle', fields=[('f\nfuncdef(name='rect_area', params=['w', '\nfuncdef(name='rect_perimeter', params=['\n...+106 more\nlive: {}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "EXIT";
+}

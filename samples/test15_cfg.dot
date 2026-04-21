@@ -1,0 +1,14 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nfuncdef(name='max2', params=['a', 'b'], \nfuncdef(name='min2', params=['a', 'b'], \nfuncdef(name='clamp', params=['val', 'lo\nfuncdef(name='abs_int', params=['x'], pa\n...+30 more\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<', left=var(\nlive: {best_max,best_min,vi}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1\nprint(exprs=[string(value='Array max:'),\nprint(exprs=[string(value='Array min:'),\nlive: {best_max,best_min}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "EXIT";
+}

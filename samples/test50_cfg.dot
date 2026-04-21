@@ -1,0 +1,14 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nassign(name='N', value=number(value=8.0)\nassign(name='BAD_FLUX', value=number(val\narray_decl(name='obj_name', elem_type='s\narray_decl(name='redshift', elem_type='f\n...+30 more\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<', left=var(\nlive: {i}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1\nassign(name='__t2', value=call(name='bes\nassign(name='__t2', value=var(name='__t2\nassign(name='__t2', value=var(name='__t2\nassign(name='__t2', value=var(name='__t2\n...+16 more\nlive: {}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "EXIT";
+}

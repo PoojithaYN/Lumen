@@ -1,0 +1,7 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nfuncdef(name='countdown_print', params=[\nfuncdef(name='sum_recursive', params=['n\nfuncdef(name='product_recursive', params\nfuncdef(name='count_even', params=['n'],\n...+22 more\nlive: {}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "EXIT";
+}

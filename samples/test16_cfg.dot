@@ -1,0 +1,7 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\narray_decl(name='data', elem_type='int',\nassign(name='N', value=number(value=5.0)\nfuncdef(name='rsum', params=['idx', 'n']\nfuncdef(name='rmax', params=['idx', 'n',\n...+12 more\nlive: {}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "EXIT";
+}

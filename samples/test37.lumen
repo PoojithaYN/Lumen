@@ -1,0 +1,30 @@
+def level_sum(int depth, int max_depth, int node_val) {
+    if (depth > max_depth) { return 0; }
+    int left  = level_sum(depth + 1, max_depth, node_val * 2);
+    int right = level_sum(depth + 1, max_depth, node_val * 2 + 1);
+    return node_val + left + right;
+}
+
+def nodes_at_depth(int d) {
+    if (d == 0) { return 1; }
+    return 2 * nodes_at_depth(d - 1);
+}
+
+int max_d = 4;
+int total = level_sum(0, max_d, 1);
+print("Sum of all node values (depth 0 to", max_d, "):", total);
+
+int d = 0;
+while (d <= max_d) {
+    int count = nodes_at_depth(d);
+    print("Depth", d, "has", count, "node(s)");
+    d = d + 1;
+}
+
+int grand_total = 0;
+int dd = 0;
+while (dd <= max_d) {
+    grand_total = grand_total + nodes_at_depth(dd);
+    dd = dd + 1;
+}
+print("Total nodes in tree:", grand_total);

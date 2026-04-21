@@ -1,0 +1,52 @@
+const float STAR_FLUX   = 1000.0;
+const float THRESHOLD   = 0.98;
+const int   N_OBS       = 12;
+
+float[] flux = [1000.0, 999.0, 985.0, 972.0,
+                968.0, 971.0, 984.0, 998.0,
+                1001.0, 1000.0, 969.0, 967.0];
+
+def is_transit(float f) {
+    float ratio = f / STAR_FLUX;
+    if (ratio < THRESHOLD) { return 1; }
+    return 0;
+}
+
+def transit_depth(float f) {
+    return STAR_FLUX - f;
+}
+
+print("=== Exoplanet Transit Search ===");
+print("Star baseline flux:", STAR_FLUX);
+print("Detection threshold:", THRESHOLD, "* baseline");
+print("");
+
+int transit_count = 0;
+float max_depth   = 0.0;
+int deep_idx      = -1;
+
+int i = 0;
+while (i < N_OBS) {
+    int in_transit = is_transit(flux[i]);
+    if (in_transit == 1) {
+        float depth = transit_depth(flux[i]);
+        print("Observation", i, ": TRANSIT  flux=", flux[i], "depth=", depth);
+        transit_count = transit_count + 1;
+        if (depth > max_depth) {
+            max_depth = depth;
+            deep_idx  = i;
+        }
+    } else {
+        print("Observation", i, ": clear    flux=", flux[i]);
+    }
+    i = i + 1;
+}
+
+print("");
+print("Total transit observations:", transit_count);
+if (deep_idx != -1) {
+    print("Deepest transit at observation", deep_idx);
+    print("Max depth:", max_depth, "flux units");
+    float rp_rs_sq = max_depth / STAR_FLUX;
+    print("(Rp/Rs)^2 estimate:", rp_rs_sq);
+}

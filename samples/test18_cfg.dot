@@ -1,0 +1,21 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\narray_decl(name='star_names', elem_type=\narray_decl(name='star_dists', elem_type=\narray_decl(name='star_mags', elem_type='\narray_decl(name='star_sp', elem_type='in\n...+2 more\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<', left=var(\nlive: {ci}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1\nassign(name='nearby_count', value=number\nassign(name='bright_count', value=number\nassign(name='ni', value=number(value=0.0\nlive: {}"];
+  "while_cond_5" [label="while_cond_5\nwhile(cond=binop(operator='<', left=var(\nlive: {bright_count,nearby_count,ni}"];
+  "while_body_5" [label="while_body_5"];
+  "while_exit_5" [label="while_exit_5\nprint(exprs=[string(value='Total nearby \nprint(exprs=[string(value='Total bright \nlive: {bright_count,nearby_count}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "while_cond_5";
+  "while_cond_5" -> "while_body_5";
+  "while_cond_5" -> "while_exit_5";
+  "while_body_5" -> "while_cond_5";
+  "while_exit_5" -> "EXIT";
+}

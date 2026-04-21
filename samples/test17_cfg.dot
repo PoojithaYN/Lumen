@@ -1,0 +1,19 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nassign(name='x', value=number(value=100.\nprint(exprs=[string(value='Outer x:'), n\nif(cond=bool(value=True), then_body=[ass\nlive: {}"];
+  "then_1" [label="then_1"];
+  "merge_1" [label="merge_1\nassign(name='total', value=number(value=\nassign(name='i', value=number(value=0.0)\nlive: {}"];
+  "while_cond_4" [label="while_cond_4\nwhile(cond=binop(operator='<', left=var(\nlive: {i,total}"];
+  "while_body_4" [label="while_body_4"];
+  "while_exit_4" [label="while_exit_4\nprint(exprs=[string(value='Sum of square\nfuncdef(name='compute', params=['n'], pa\nfuncdef(name='compute2', params=['n'], p\nfuncdef(name='outer_fn', params=['val'],\n...+4 more\nlive: {total}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "then_1";
+  "ENTRY" -> "merge_1";
+  "then_1" -> "merge_1";
+  "merge_1" -> "while_cond_4";
+  "while_cond_4" -> "while_body_4";
+  "while_cond_4" -> "while_exit_4";
+  "while_body_4" -> "while_cond_4";
+  "while_exit_4" -> "EXIT";
+}

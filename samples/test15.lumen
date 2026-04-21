@@ -1,0 +1,58 @@
+def max2(int a, int b) {
+    if (a > b) { return a; }
+    return b;
+}
+
+def min2(int a, int b) {
+    if (a < b) { return a; }
+    return b;
+}
+
+def clamp(int val, int lo, int hi) {
+    int clamped = max2(lo, min2(val, hi));
+    return clamped;
+}
+
+def abs_int(int x) {
+    if (x < 0) { return x - x - x; }
+    return x;
+}
+
+def gcd(int a, int b) {
+    int aa = abs_int(a);
+    int bb = abs_int(b);
+    while (bb != 0) {
+        int temp = bb;
+        int rem  = aa - (aa / bb) * bb;
+        aa = temp;
+        bb = rem;
+    }
+    return aa;
+}
+
+def lcm(int a, int b) {
+    int g = gcd(a, b);
+    return (a / g) * b;
+}
+
+print("clamp(5,  1, 10) =", clamp(5,  1, 10));
+print("clamp(-3, 1, 10) =", clamp(-3, 1, 10));
+print("clamp(15, 1, 10) =", clamp(15, 1, 10));
+print("abs_int(-7) =", abs_int(-7));
+print("abs_int(4)  =", abs_int(4));
+print("gcd(48, 18)  =", gcd(48, 18));
+print("gcd(100, 75) =", gcd(100, 75));
+print("lcm(4, 6)    =", lcm(4, 6));
+print("lcm(12, 15)  =", lcm(12, 15));
+
+int[] vals = [34, 7, 23, 89, 12, 56, 2, 78];
+int best_max = vals[0];
+int best_min = vals[0];
+int vi = 1;
+while (vi < 8) {
+    best_max = max2(best_max, vals[vi]);
+    best_min = min2(best_min, vals[vi]);
+    vi = vi + 1;
+}
+print("Array max:", best_max);
+print("Array min:", best_min);

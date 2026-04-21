@@ -1,0 +1,14 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nassign(name='a', value=number(value=8.0)\nassign(name='b', value=number(value=6.0)\nassign(name='c', value=number(value=12.0\nassign(name='d', value=number(value=14.0\n...+21 more\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<', left=var(\nlive: {i,sum}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1\nprint(exprs=[string(value='Sum 0+1+2+3+4\nassign(name='x1', value=number(value=5.0\nassign(name='x2', value=number(value=10.\nassign(name='x3', value=number(value=15.\n...+1 more\nlive: {sum}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "EXIT";
+}

@@ -1,0 +1,34 @@
+def collatz_steps(int n) {
+    int steps = 0;
+    int current = n;
+    while (current != 1) {
+        int is_even = current - (current / 2) * 2;
+        if (is_even == 0) {
+            current = current / 2;
+        } else {
+            current = 3 * current + 1;
+        }
+        steps = steps + 1;
+    }
+    return steps;
+}
+
+int i = 1;
+while (i <= 15) {
+    int steps = collatz_steps(i);
+    print("collatz(", i, ") =", steps, "steps");
+    i = i + 1;
+}
+
+int max_steps = 0;
+int max_n     = 1;
+int n = 1;
+while (n <= 30) {
+    int s = collatz_steps(n);
+    if (s > max_steps) {
+        max_steps = s;
+        max_n     = n;
+    }
+    n = n + 1;
+}
+print("Most steps in 1-30: n =", max_n, "with", max_steps, "steps");

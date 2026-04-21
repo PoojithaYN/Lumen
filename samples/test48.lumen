@@ -1,0 +1,49 @@
+const float H0 = 70.0;
+const float C  = 299792.0;
+
+def recession_velocity(float z) {
+    return z * C;
+}
+
+def hubble_distance(float z) {
+    return recession_velocity(z) / H0;
+}
+
+def classify_redshift(float z) {
+    if (z < 0.01)  { return 1; }
+    if (z < 0.1)   { return 2; }
+    if (z < 0.5)   { return 3; }
+    if (z < 1.0)   { return 4; }
+    if (z < 3.0)   { return 5; }
+    return 6;
+}
+
+def print_redshift_class(int cls) {
+    switch (cls) {
+        case 1: { print("  -> Local universe (z<0.01)");     }
+        case 2: { print("  -> Nearby galaxy  (z<0.1)");      }
+        case 3: { print("  -> Intermediate   (z<0.5)");      }
+        case 4: { print("  -> Distant        (z<1.0)");      }
+        case 5: { print("  -> High redshift  (z<3.0)");      }
+        case 6: { print("  -> Very high-z / early universe");}
+    }
+    return cls;
+}
+
+string[] galaxy_names = ["M31", "Virgo A", "Coma Cl", "SDSS-1", "GN-z11"];
+float[]  redshifts    = [0.0001, 0.0036, 0.023, 0.38, 10.96];
+int N = 5;
+int i = 0;
+while (i < N) {
+    float z   = redshifts[i];
+    float v   = recession_velocity(z);
+    float d   = hubble_distance(z);
+    int   cls = classify_redshift(z);
+    print("Galaxy:", galaxy_names[i]);
+    print("  Redshift z =", z);
+    print("  Recession velocity:", v, "km/s");
+    print("  Hubble distance:", d, "Mpc");
+    int dummy = print_redshift_class(cls);
+    print("");
+    i = i + 1;
+}

@@ -1,0 +1,19 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nassign(name='STAR_FLUX', value=number(va\nassign(name='THRESHOLD', value=number(va\nassign(name='N_OBS', value=number(value=\narray_decl(name='flux', elem_type='float\n...+10 more\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<', left=var(\nlive: {i,transit_count}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1\nprint(exprs=[string(value='')], lineno=4\nprint(exprs=[string(value='Total transit\nif(cond=binop(operator='!=', left=var(na\nlive: {transit_count}"];
+  "then_5" [label="then_5"];
+  "merge_5" [label="merge_5"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "then_5";
+  "while_exit_1" -> "merge_5";
+  "then_5" -> "merge_5";
+  "merge_5" -> "EXIT";
+}

@@ -1,0 +1,99 @@
+const int   N        = 8;
+const float BAD_FLUX = -1.0;
+
+string[] obj_name = ["NGC1", "NGC2", "NGC3", "NGC4",
+                     "NGC5", "NGC6", "NGC7", "NGC8"];
+float[]  redshift = [0.012, 0.034, 0.071, 0.155,
+                     0.302, 0.511, 0.988, 2.14];
+float[]  flux_obs = [12.3,  8.7,   BAD_FLUX, 4.2,
+                     6.1,   BAD_FLUX, 2.9, 1.1];
+float[]  flux_err = [0.3,   0.2,   0.0,   0.4,
+                     0.2,   0.0,   0.3,   0.4];
+int[]    quality  = [1,     1,     0,     1,
+                     1,     0,     1,     1];
+
+def snr(float f, float e) {
+    if (e <= 0.0) { return 0.0; }
+    return f / e;
+}
+
+def lum_dist_mpc(float z) {
+    return z * 4282.0;
+}
+
+def classify_z(float z) {
+    if (z < 0.05)  { return 1; }
+    if (z < 0.2)   { return 2; }
+    if (z < 0.5)   { return 3; }
+    if (z < 1.0)   { return 4; }
+    return 5;
+}
+
+def print_z_class(int cls) {
+    switch (cls) {
+        case 1: { print("    Epoch: Local"); }
+        case 2: { print("    Epoch: Nearby"); }
+        case 3: { print("    Epoch: Intermediate"); }
+        case 4: { print("    Epoch: Distant"); }
+        case 5: { print("    Epoch: Early universe"); }
+    }
+    return cls;
+}
+
+def count_good(int idx) {
+    if (idx >= N) { return 0; }
+    return quality[idx] + count_good(idx + 1);
+}
+
+def best_snr_idx(int idx, int best) {
+    if (idx >= N) { return best; }
+    if (quality[idx] == 1 and quality[best] == 1) {
+        if (snr(flux_obs[idx], flux_err[idx]) > snr(flux_obs[best], flux_err[best])) {
+            return best_snr_idx(idx + 1, idx);
+        }
+    }
+    return best_snr_idx(idx + 1, best);
+}
+
+print("=== OBSERVATIONAL PIPELINE ===");
+print("");
+
+int good_total = count_good(0);
+print("Good quality objects:", good_total, "of", N);
+print("");
+
+int i = 0;
+while (i < N) {
+    print("Object:", obj_name[i]);
+    if (quality[i] == 0) {
+        print("  [BAD DATA - skipped]");
+        print("");
+        i = i + 1;
+        continue;
+    }
+    try {
+        float z   = redshift[i];
+        float f   = flux_obs[i];
+        float e   = flux_err[i];
+        float s   = snr(f, e);
+        float d   = lum_dist_mpc(z);
+        int   cls = classify_z(z);
+        print("  Redshift:", z);
+        print("  Flux:", f, "  Err:", e);
+        print("  SNR:", s);
+        print("  Lum dist:", d, "Mpc");
+        int dummy = print_z_class(cls);
+        if (s < 10.0) { print("  WARNING: low SNR"); }
+        if (z > 1.0)  { print("  NOTE: high-z object"); }
+    } catch (err) {
+        print("  ERROR:", err);
+    }
+    print("");
+    i = i + 1;
+}
+
+int best = best_snr_idx(1, 0);
+print("Best SNR object:", obj_name[best]);
+print("  SNR:", snr(flux_obs[best], flux_err[best]));
+print("");
+print("=== DONE ===");

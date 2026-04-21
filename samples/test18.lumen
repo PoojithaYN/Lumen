@@ -1,0 +1,40 @@
+string[] star_names = ["Sirius",   "Vega",   "Canopus", "Arcturus", "Rigel"];
+float[]  star_dists = [2.64,       7.68,     95.0,      11.3,       264.0];
+float[]  star_mags  = [1.46,       0.03,     0.72,      1.14,       0.18];
+int[]    star_sp    = [2,          3,        2,         5,          2];
+
+print("=== Star Catalogue ===");
+int ci = 0;
+while (ci < 5) {
+    print("Name:", star_names[ci]);
+    print("  dist:", star_dists[ci], "pc");
+    print("  mag :", star_mags[ci]);
+
+    if (star_dists[ci] < 10.0) {
+        print("  -> NEARBY");
+    }
+    if (star_mags[ci] < 1.0) {
+        print("  -> VERY BRIGHT");
+    }
+    if (star_sp[ci] == 2) {
+        print("  -> Type B star");
+    }
+    if (star_sp[ci] == 3) {
+        print("  -> Type A star");
+    }
+    if (star_sp[ci] == 5) {
+        print("  -> Type G (Sun-like)");
+    }
+    ci = ci + 1;
+}
+
+int nearby_count = 0;
+int bright_count = 0;
+int ni = 0;
+while (ni < 5) {
+    if (star_dists[ni] < 15.0) { nearby_count = nearby_count + 1; }
+    if (star_mags[ni]  <  1.5) { bright_count = bright_count + 1; }
+    ni = ni + 1;
+}
+print("Total nearby (< 15 pc):", nearby_count);
+print("Total bright (mag < 1.5):", bright_count);

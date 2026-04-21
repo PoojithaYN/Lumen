@@ -1,0 +1,14 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nassign(name='H_ALPHA', value=number(valu\nassign(name='H_BETA', value=number(value\nassign(name='H_GAMMA', value=number(valu\nassign(name='NA_D', value=number(value=5\n...+8 more\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<', left=var(\nlive: {i}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "EXIT";
+}

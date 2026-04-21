@@ -1,0 +1,30 @@
+string[] elements = ["Hydrogen", "Helium", "Carbon", "Oxygen", "Iron"];
+float[]  masses   = [1.008, 4.003, 12.011, 15.999, 55.845];
+int[]    groups   = [1,     18,    14,     16,     8];
+
+def classify_group(int g) {
+    switch (g) {
+        case 1:  { print("    Group: Alkali metals / Hydrogen"); }
+        case 14: { print("    Group: Carbon group");             }
+        case 16: { print("    Group: Chalcogens");               }
+        case 18: { print("    Group: Noble gases");              }
+    }
+    return g;
+}
+
+print("=== Element Catalogue ===");
+int i = 0;
+while (i < 5) {
+    print("Element:", elements[i]);
+    print("  Atomic mass:", masses[i]);
+    int dummy = classify_group(groups[i]);
+    i = i + 1;
+}
+
+float total_mass = 0.0;
+int j = 0;
+while (j < 5) {
+    total_mass = total_mass + masses[j];
+    j = j + 1;
+}
+print("Sum of masses:", total_mass);

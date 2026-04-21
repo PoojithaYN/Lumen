@@ -1,0 +1,21 @@
+int a = 17;
+int b = 5;
+int quotient  = a / b;
+int remainder = a - (a / b) * b;
+print("17 / 5 =", quotient);
+print("17 mod 5 =", remainder);
+
+int c = 100;
+int d = 7;
+int q2 = c / d;
+int r2 = c - (c / d) * d;
+print("100 / 7 =", q2);
+print("100 mod 7 =", r2);
+
+def mod(int x, int y) {
+    return x - (x / y) * y;
+}
+
+print("mod(23, 4) =", mod(23, 4));
+print("mod(36, 6) =", mod(36, 6));
+print("mod(99, 10) =", mod(99, 10));

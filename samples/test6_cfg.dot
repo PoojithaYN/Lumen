@@ -1,0 +1,21 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nfuncdef(name='factorial', params=['n'], \nfuncdef(name='fib', params=['n'], param_\nassign(name='i', value=number(value=1.0)\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<=', left=var\nlive: {i}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1\nassign(name='j', value=number(value=0.0)\nlive: {}"];
+  "while_cond_5" [label="while_cond_5\nwhile(cond=binop(operator='<=', left=var\nlive: {j}"];
+  "while_body_5" [label="while_body_5"];
+  "while_exit_5" [label="while_exit_5"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "while_cond_5";
+  "while_cond_5" -> "while_body_5";
+  "while_cond_5" -> "while_exit_5";
+  "while_body_5" -> "while_cond_5";
+  "while_exit_5" -> "EXIT";
+}

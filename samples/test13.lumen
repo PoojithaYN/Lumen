@@ -1,0 +1,40 @@
+struct Point {
+    float x;
+    float y;
+}
+
+struct Rectangle {
+    float width;
+    float height;
+}
+
+def rect_area(float w, float h) {
+    return w * h;
+}
+
+def rect_perimeter(float w, float h) {
+    return 2.0 * w + 2.0 * h;
+}
+
+def triangle_area(float base, float height) {
+    return 0.5 * base * height;
+}
+
+float a1 = rect_area(5.0, 3.0);
+float p1 = rect_perimeter(5.0, 3.0);
+print("Rectangle 5x3:");
+print("  area:", a1);
+print("  perimeter:", p1);
+
+float a2 = rect_area(10.0, 4.0);
+float p2 = rect_perimeter(10.0, 4.0);
+print("Rectangle 10x4:");
+print("  area:", a2);
+print("  perimeter:", p2);
+
+float ta = triangle_area(6.0, 4.0);
+print("Triangle base=6 height=4:");
+print("  area:", ta);
+
+float total = a1 + a2;
+print("Total rectangle area:", total);

@@ -1,0 +1,7 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nfuncdef(name='risky_divide', params=['a'\nfuncdef(name='risky_index', params=['idx\nfuncdef(name='risky_sqrt', params=['x'],\nassign(name='pass', value=number(value=0\n...+11 more\nlive: {}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "EXIT";
+}

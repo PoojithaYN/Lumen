@@ -1,0 +1,14 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nassign(name='is_hot', value=bool(value=T\nassign(name='is_rainy', value=bool(value\nassign(name='go_out', value=bool(value=T\nprint(exprs=[string(value='is_hot:'), bo\n...+5 more\nlive: {}"];
+  "then_1" [label="then_1"];
+  "merge_1" [label="merge_1\nassign(name='a', value=bool(value=True),\nassign(name='b', value=bool(value=False)\nprint(exprs=[string(value='true AND fals\nprint(exprs=[string(value='true OR  fals\n...+2 more\nlive: {}"];
+  "else_1" [label="else_1"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "then_1";
+  "ENTRY" -> "else_1";
+  "then_1" -> "merge_1";
+  "merge_1" -> "EXIT";
+  "else_1" -> "merge_1";
+}

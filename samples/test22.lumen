@@ -1,0 +1,45 @@
+int[] scores = [45, 78, 92, 61, 88, 34, 95, 72, 56, 83];
+int N = 10;
+
+int pass_count = 0;
+int fail_count = 0;
+int i = 0;
+while (i < N) {
+    if (scores[i] >= 60) {
+        pass_count = pass_count + 1;
+    } else {
+        fail_count = fail_count + 1;
+    }
+    i = i + 1;
+}
+print("Pass:", pass_count, "  Fail:", fail_count);
+
+int max_score = scores[0];
+int min_score = scores[0];
+int j = 1;
+while (j < N) {
+    if (scores[j] > max_score) { max_score = scores[j]; }
+    if (scores[j] < min_score) { min_score = scores[j]; }
+    j = j + 1;
+}
+print("Max score:", max_score);
+print("Min score:", min_score);
+
+int sum = 0;
+int k = 0;
+while (k < N) {
+    sum = sum + scores[k];
+    k = k + 1;
+}
+print("Average:", sum / N);
+
+int above_80 = 0;
+int m = 0;
+while (m < N) {
+    if (scores[m] > 80) {
+        print("Score above 80:", scores[m]);
+        above_80 = above_80 + 1;
+    }
+    m = m + 1;
+}
+print("Total above 80:", above_80);

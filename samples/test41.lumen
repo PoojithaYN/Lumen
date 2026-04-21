@@ -1,0 +1,44 @@
+const float H_ALPHA  = 656.3;
+const float H_BETA   = 486.1;
+const float H_GAMMA  = 434.0;
+const float NA_D     = 589.3;
+const float CA_K     = 393.4;
+const float TOLERANCE = 2.0;
+
+def abs_diff(float a, float b) {
+    float d = a - b;
+    if (d < 0.0) { return d - d - d; }
+    return d;
+}
+
+def identify_line(float wavelength) {
+    if (abs_diff(wavelength, H_ALPHA) < TOLERANCE)  { return 1; }
+    if (abs_diff(wavelength, H_BETA)  < TOLERANCE)  { return 2; }
+    if (abs_diff(wavelength, H_GAMMA) < TOLERANCE)  { return 3; }
+    if (abs_diff(wavelength, NA_D)    < TOLERANCE)  { return 4; }
+    if (abs_diff(wavelength, CA_K)    < TOLERANCE)  { return 5; }
+    return 0;
+}
+
+def print_line(int id) {
+    switch (id) {
+        case 0: { print("  -> Unknown line"); }
+        case 1: { print("  -> H-alpha (Hydrogen, red)"); }
+        case 2: { print("  -> H-beta  (Hydrogen, blue-green)"); }
+        case 3: { print("  -> H-gamma (Hydrogen, violet)"); }
+        case 4: { print("  -> Na D    (Sodium doublet, yellow)"); }
+        case 5: { print("  -> Ca K    (Calcium, UV)"); }
+    }
+    return id;
+}
+
+float[] observed = [656.1, 486.5, 590.0, 700.0, 393.2, 434.3, 550.0];
+int N = 7;
+int i = 0;
+while (i < N) {
+    float wl = observed[i];
+    print("Wavelength:", wl, "nm");
+    int id    = identify_line(wl);
+    int dummy = print_line(id);
+    i = i + 1;
+}

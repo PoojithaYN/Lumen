@@ -1,0 +1,21 @@
+bool is_hot   = true;
+bool is_rainy = false;
+bool go_out   = is_hot and not is_rainy;
+print("is_hot:", is_hot);
+print("is_rainy:", is_rainy);
+print("go_out:", go_out);
+
+int temp = 38;
+bool fever = temp > 37;
+if (fever) {
+    print("Fever detected! Temp:", temp);
+} else {
+    print("Temperature normal:", temp);
+}
+
+bool a = true;
+bool b = false;
+print("true AND false:", a and b);
+print("true OR  false:", a or b);
+print("NOT true:", not a);
+print("NOT false:", not b);

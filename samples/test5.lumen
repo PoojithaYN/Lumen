@@ -1,0 +1,18 @@
+def square(int n) {
+    return n * n;
+}
+
+def cube(int n) {
+    return n * n * n;
+}
+
+def add(int a, int b) {
+    return a + b;
+}
+
+int s = square(7);
+int c = cube(3);
+int sm = add(square(3), square(4));
+print("7 squared:", s);
+print("3 cubed:", c);
+print("3^2 + 4^2:", sm);

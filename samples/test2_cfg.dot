@@ -1,0 +1,24 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nassign(name='score', value=number(value=\nassign(name='grade', value=string(value=\nif(cond=bool(value=False), then_body=[as\nlive: {}"];
+  "then_1" [label="then_1"];
+  "merge_1" [label="merge_1\nif(cond=bool(value=True), then_body=[if(\nlive: {grade}"];
+  "then_4" [label="then_4"];
+  "merge_4" [label="merge_4\nprint(exprs=[string(value='Score:'), num\nassign(name='x', value=number(value=10.0\nif(cond=bool(value=True), then_body=[pri\nlive: {grade}"];
+  "then_6" [label="then_6"];
+  "merge_6" [label="merge_6"];
+  "else_6" [label="else_6"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "then_1";
+  "ENTRY" -> "merge_1";
+  "then_1" -> "merge_1";
+  "merge_1" -> "then_4";
+  "merge_1" -> "merge_4";
+  "then_4" -> "merge_4";
+  "merge_4" -> "then_6";
+  "merge_4" -> "else_6";
+  "then_6" -> "merge_6";
+  "merge_6" -> "EXIT";
+  "else_6" -> "merge_6";
+}

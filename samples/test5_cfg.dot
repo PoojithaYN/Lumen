@@ -1,0 +1,7 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nfuncdef(name='square', params=['n'], par\nfuncdef(name='cube', params=['n'], param\nfuncdef(name='add', params=['a', 'b'], p\nassign(name='__t1', value=call(name='squ\n...+80 more\nlive: {}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "EXIT";
+}

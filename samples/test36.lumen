@@ -1,0 +1,58 @@
+def check_positive(float x) {
+    if (x <= 0.0) {
+        throw "Value must be positive";
+    }
+    return x;
+}
+
+def check_range(int x, int lo, int hi) {
+    if (x < lo) {
+        throw "Value below minimum";
+    }
+    if (x > hi) {
+        throw "Value above maximum";
+    }
+    return x;
+}
+
+def safe_sqrt_approx(float x) {
+    if (x < 0.0) {
+        throw "Cannot take sqrt of negative number";
+    }
+    if (x == 0.0) { return 0.0; }
+    float guess = x / 2.0;
+    int itr = 0;
+    while (itr < 10) {
+        guess = (guess + x / guess) / 2.0;
+        itr = itr + 1;
+    }
+    return guess;
+}
+
+float[] test_vals = [4.0, 9.0, 2.0, -1.0, 0.0, 16.0];
+int N = 6;
+int i = 0;
+while (i < N) {
+    try {
+        float v    = check_positive(test_vals[i]);
+        float root = safe_sqrt_approx(v);
+        print("sqrt(", v, ") =", root);
+    } catch (err) {
+        print("Error for value", test_vals[i], ":", err);
+    }
+    i = i + 1;
+}
+
+print("--- Range checks ---");
+int[] range_tests = [5, -1, 15, 100, 0, 10];
+int M = 6;
+int j = 0;
+while (j < M) {
+    try {
+        int valid = check_range(range_tests[j], 0, 10);
+        print("Value", valid, "is in range [0, 10]");
+    } catch (err) {
+        print("Range error for", range_tests[j], ":", err);
+    }
+    j = j + 1;
+}

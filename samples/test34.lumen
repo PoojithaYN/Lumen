@@ -1,0 +1,35 @@
+const float L_SUN = 1.0;
+
+def lum_class(float lum) {
+    if (lum > 100000.0) { return 1; }
+    if (lum > 1000.0)   { return 2; }
+    if (lum > 100.0)    { return 3; }
+    if (lum > 1.0)      { return 4; }
+    if (lum > 0.01)     { return 5; }
+    return 6;
+}
+
+def print_class(int cls) {
+    switch (cls) {
+        case 1: { print("  Class: Ia Supergiant"); }
+        case 2: { print("  Class: Ib Bright giant"); }
+        case 3: { print("  Class: II Giant"); }
+        case 4: { print("  Class: III Subgiant"); }
+        case 5: { print("  Class: V Main sequence"); }
+        case 6: { print("  Class: VI Subdwarf / White dwarf"); }
+    }
+    return cls;
+}
+
+string[] star_names = ["Rigel", "Canopus", "Arcturus", "Vega", "Sun", "Proxima"];
+float[]  lums       = [66000.0, 13600.0, 170.0, 40.0, 1.0, 0.0017];
+int N = 6;
+
+int i = 0;
+while (i < N) {
+    print("Star:", star_names[i]);
+    print("  Luminosity:", lums[i], "L_sun");
+    int cls   = lum_class(lums[i]);
+    int dummy = print_class(cls);
+    i = i + 1;
+}

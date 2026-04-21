@@ -1,0 +1,19 @@
+type Count  = int;
+type Score  = float;
+
+const int   MAX_ITEMS = 5;
+const float PI        = 3.14159;
+const string GREETING = "Hello from Lumen";
+
+print(GREETING);
+print("MAX_ITEMS:", MAX_ITEMS);
+print("PI:", PI);
+
+float circle_area = PI * 3.0 * 3.0;
+print("Area of circle r=3:", circle_area);
+
+int counter = 0;
+while (counter < MAX_ITEMS) {
+    print("Item", counter, "of", MAX_ITEMS);
+    counter = counter + 1;
+}
