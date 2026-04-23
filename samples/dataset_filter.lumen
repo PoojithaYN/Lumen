@@ -1,8 +1,0 @@
-# Function with dataset handling
-def process_catalog() {
-    dataset data = load("ngc300.csv");
-    filter data where mag < 15;
-    print("Filtered bright objects");
-}
-
-process_catalog();

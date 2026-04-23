@@ -1,2 +1,0 @@
-float dist = 4.2 pc;
-print(dist);

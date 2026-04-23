@@ -1012,20 +1012,78 @@ class HeapAllocator:
 
 
 def simulate_heap(ir):
-    """Walk IR and simulate heap operations for new / struct_def."""
-    heap = HeapAllocator()
-    SIZES = {'int':8,'float':8,'bool':1,'string':64,'unknown':8}
+    """
+    Walk IR and simulate heap allocations for every construct that
+    allocates memory at runtime:
+
+      array_decl   -> each element is 8 bytes + 56 byte list header
+      assign(new)  -> struct/class instance, 64 bytes minimum
+      assign(call) -> conservative: functions may return heap objects
+      string       -> each unique string literal, 56 bytes + len
+      struct_lit   -> inline struct value, 32 bytes
+      funcdef      -> code object, 128 bytes (Python function object)
+    """
+    heap = HeapAllocator(size=65536)
+    ELEM_SIZE    = {'int': 8, 'float': 8, 'bool': 1,
+                    'string': 64, 'unknown': 8}
+    seen_strings = set()
 
     def walk(instrs):
         for instr in instrs:
-            if instr.op == 'assign' and hasattr(instr.value,'op'):
-                if instr.value.op == 'new':
-                    heap.malloc(64, tag=f"new {instr.value.class_name} -> {instr.name}")
-                elif instr.value.op == 'struct_lit':
-                    heap.malloc(32, tag=f"struct {instr.value.struct_name} -> {instr.name}")
-            for attr in ('body','then_body','else_body','try_body','catch_body'):
+
+            # array declarations
+            if instr.op == 'array_decl':
+                n_elems = len(instr.init)
+                elem_sz = ELEM_SIZE.get(instr.elem_type, 8)
+                total   = 56 + n_elems * elem_sz
+                heap.malloc(total,
+                    tag=f"array {instr.elem_type}[{n_elems}] '{instr.name}'")
+
+            # assignments whose RHS allocates
+            elif instr.op == 'assign' and hasattr(instr.value, 'op'):
+                v = instr.value
+
+                if v.op == 'new':
+                    heap.malloc(64,
+                        tag=f"new {v.class_name}() -> '{instr.name}'")
+
+                elif v.op == 'struct_lit':
+                    n_fields = len(v.fields)
+                    heap.malloc(32 + n_fields * 8,
+                        tag=f"struct {v.struct_name}{{}} -> '{instr.name}'")
+
+                elif v.op == 'string':
+                    s = v.value
+                    if s not in seen_strings:
+                        seen_strings.add(s)
+                        sz = 56 + len(s)
+                        heap.malloc(sz,
+                            tag=f"str '{s[:20]}'" + ("..." if len(s)>20 else ""))
+
+                elif v.op == 'call':
+                    heap.malloc(64,
+                        tag=f"call {v.name}() -> '{instr.name}'")
+
+            # function definitions (code objects)
+            elif instr.op == 'funcdef':
+                heap.malloc(128,
+                    tag=f"funcdef '{instr.name}' code object")
+
+            # string literals in print statements
+            elif instr.op == 'print':
+                for ex in instr.exprs:
+                    if ex.op == 'string' and ex.value not in seen_strings:
+                        seen_strings.add(ex.value)
+                        sz = 56 + len(ex.value)
+                        heap.malloc(sz,
+                            tag=f"str '{ex.value[:20]}'" + ("..." if len(ex.value)>20 else ""))
+
+            # recurse into nested bodies
+            for attr in ('body', 'then_body', 'else_body',
+                         'try_body', 'catch_body', 'finally_body'):
                 sub = getattr(instr, attr, None)
-                if isinstance(sub, list): walk(sub)
+                if isinstance(sub, list):
+                    walk(sub)
 
     walk(ir)
     return heap

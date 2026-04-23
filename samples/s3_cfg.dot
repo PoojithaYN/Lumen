@@ -1,0 +1,21 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nassign(name='MIN_FLUX', value=number(val\nassign(name='MAX_DISTANCE', value=number\nassign(name='N_SOURCES', value=number(va\narray_decl(name='src_ra', elem_type='flo\n...+17 more\nlive: {}"];
+  "while_cond_1" [label="while_cond_1\nwhile(cond=binop(operator='<', left=var(\nlive: {good,in_gp,s,skip_d,skip_f}"];
+  "while_body_1" [label="while_body_1"];
+  "while_exit_1" [label="while_exit_1\nprint(exprs=[string(value='=== Summary =\nprint(exprs=[string(value='Processed:'),\nprint(exprs=[string(value='Skipped low f\nprint(exprs=[string(value='Skipped dista\n...+19 more\nlive: {good,in_gp,skip_d,skip_f}"];
+  "while_cond_5" [label="while_cond_5\nwhile(cond=binop(operator='<', left=var(\nlive: {best_flux,best_s,bs}"];
+  "while_body_5" [label="while_body_5"];
+  "while_exit_5" [label="while_exit_5\nprint(exprs=[string(value='Brightest sou\nprint(exprs=[string(value='')], lineno=1\nprint(exprs=[string(value='=== Distance \nassign(name='__t2', value=call(name='cou\n...+51 more\nlive: {best_flux,best_s}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "while_cond_1";
+  "while_cond_1" -> "while_body_1";
+  "while_cond_1" -> "while_exit_1";
+  "while_body_1" -> "while_cond_1";
+  "while_exit_1" -> "while_cond_5";
+  "while_cond_5" -> "while_body_5";
+  "while_cond_5" -> "while_exit_5";
+  "while_body_5" -> "while_cond_5";
+  "while_exit_5" -> "EXIT";
+}

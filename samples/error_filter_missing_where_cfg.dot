@@ -1,0 +1,7 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "EXIT";
+}

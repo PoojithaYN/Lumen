@@ -1,6 +1,0 @@
-# Conditional with unit comparison
-if (ra > 180 deg) {
-    print("Object in second quadrant");
-} else {
-    print("Object in first or fourth quadrant");
-}

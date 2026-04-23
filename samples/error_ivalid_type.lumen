@@ -1,2 +1,0 @@
-flot speed = 300 km s;
-print(speed);

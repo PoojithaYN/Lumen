@@ -1,6 +1,0 @@
-# Basic array of distances (with units)
-float[] distances = [4.2 pc, 10.5 pc, 3.8 pc];
-
-print("Number of distances:", distances.length);  # future length support, or use manual count
-print("First distance:", distances[0]);
-print("Second distance:", distances[1]);

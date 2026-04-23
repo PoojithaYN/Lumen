@@ -1,0 +1,7 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nassign(name='__t1', value=number(value=-\nassign(name='__t1', value=call(name='ra_\nassign(name='__t1', value=var(name='__t1\nassign(name='__t1', value=var(name='__t1\n...+14 more\nlive: {}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "EXIT";
+}

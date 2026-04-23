@@ -1,0 +1,12 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nassign(name='__t1', value=unit(value=2.8\nassign(name='__t1', value=var(name='__t1\nassign(name='__t1', value=var(name='__t1\nassign(name='__t1', value=var(name='__t1\n...+44 more\nlive: {}"];
+  "then_1" [label="then_1"];
+  "merge_1" [label="merge_1"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "then_1";
+  "ENTRY" -> "merge_1";
+  "then_1" -> "merge_1";
+  "merge_1" -> "EXIT";
+}

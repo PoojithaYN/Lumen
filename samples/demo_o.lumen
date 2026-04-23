@@ -1,0 +1,273 @@
+# optimisation_demo.lumen
+
+
+
+struct Planet {
+    float mass;
+    float radius;
+    float distance;
+}
+
+const float PI        = 3.14159;
+const float G         = 6.674;
+const int   N_PLANETS = 5;
+
+# -----------------------------------------------------------------------
+# PASS 1: CONSTANT FOLDING
+# The optimiser evaluates these at compile time.
+# You will see "Constant fold: 3 + 5 -> 8" in Stage 8.
+# -----------------------------------------------------------------------
+int folded_sum     = 3 + 5;
+int folded_product = 4 * 7;
+int folded_diff    = 100 - 37;
+float folded_float = 2.5 + 1.5;
+bool folded_bool   = 3 > 2;
+
+print("=== Pass 1: Constant Folding ===");
+print("3 + 5     =", folded_sum);
+print("4 * 7     =", folded_product);
+print("100 - 37  =", folded_diff);
+print("2.5 + 1.5 =", folded_float);
+print("3 > 2     =", folded_bool);
+
+# -----------------------------------------------------------------------
+# PASS 2: CONSTANT PROPAGATION
+# folded_sum = 8 gets substituted into the next expression.
+# doubled = 8 + 8 then gets folded to 16.
+# You will see "Constant propagation: 'folded_sum' -> 8" in Stage 8.
+# -----------------------------------------------------------------------
+int doubled = folded_sum + folded_sum;
+int tripled = folded_sum + doubled;
+print("=== Pass 2: Constant Propagation ===");
+print("doubled (8+8)  =", doubled);
+print("tripled (8+16) =", tripled);
+
+# -----------------------------------------------------------------------
+# PASS 3: ALGEBRAIC SIMPLIFICATION (peephole)
+# x*1->x,  x+0->x,  x-0->x,  x*0->0,  x/1->x
+# You will see "Algebraic: x*1->x" etc in Stage 8.
+# -----------------------------------------------------------------------
+int x    = 42;
+int alg1 = x * 1;
+int alg2 = x + 0;
+int alg3 = x - 0;
+int alg4 = x * 0;
+int alg5 = x / 1;
+print("=== Pass 3: Algebraic Simplification ===");
+print("x = 42");
+print("x * 1 =", alg1);
+print("x + 0 =", alg2);
+print("x - 0 =", alg3);
+print("x * 0 =", alg4);
+print("x / 1 =", alg5);
+
+# -----------------------------------------------------------------------
+# PASS 4: STRENGTH REDUCTION
+# x*2 -> x+x  (addition cheaper than multiplication)
+# You will see "Strength: x*2->x+x" in Stage 8.
+# -----------------------------------------------------------------------
+int base = 7;
+int sr1  = base * 2;
+int sr2  = base * 2 * 2;
+print("=== Pass 4: Strength Reduction ===");
+print("7 * 2     =", sr1);
+print("7 * 2 * 2 =", sr2);
+
+# -----------------------------------------------------------------------
+# PASS 5: COPY PROPAGATION
+# a = b; c = a  =>  c = b  (the intermediate copy is eliminated)
+# You will see "Copy propagation: 'copy_b' -> 'original'" in Stage 8.
+# -----------------------------------------------------------------------
+int original = 99;
+int copy_a   = original;
+int copy_b   = copy_a;
+int copy_c   = copy_b + 1;
+print("=== Pass 5: Copy Propagation ===");
+print("original =", original);
+print("copy_a   =", copy_a);
+print("copy_b   =", copy_b);
+print("copy_c   =", copy_c);
+
+# -----------------------------------------------------------------------
+# PASS 6: COMMON SUBEXPRESSION ELIMINATION
+# PI * r1 * r1 computed once, stored in __t1, reused.
+# You will see "CSE: '...' -> '__t1'" in Stage 8.
+# -----------------------------------------------------------------------
+float r1    = 3.0 ;
+float r2    = 5.0 ;
+float circ1 = PI * r1 * r1;
+float circ2 = PI * r2 * r2;
+float ratio = circ2 / circ1;
+print("=== Pass 6: CSE ===");
+print("Circle area r=3:", circ1);
+print("Circle area r=5:", circ2);
+print("Area ratio 5/3 :", ratio);
+
+# -----------------------------------------------------------------------
+# PASS 7: DEAD CODE ELIMINATION
+# CSE creates __tN temps. Any temp never read gets removed.
+# You will see "DCE: removed dead '__t...'" in Stage 8.
+# -----------------------------------------------------------------------
+
+# -----------------------------------------------------------------------
+# FUNCTIONS AND RECURSION
+# -----------------------------------------------------------------------
+def factorial(int n) {
+    if (n <= 1) { return 1; }
+    return n * factorial(n - 1);
+}
+
+def power(int b, int e) {
+    if (e == 0) { return 1; }
+    return b * power(b, e - 1);
+}
+
+def sphere_vol(float r) {
+    float r3 = r * r * r;
+    return 4.0 * PI * r3 / 3.0;
+}
+
+def orbital_t2(float a) {
+    float a3 = a * a * a;
+    return 4.0 * PI * PI * a3 / G;
+}
+
+print("=== Functions and Recursion ===");
+print("5!          =", factorial(5));
+print("7!          =", factorial(7));
+print("2^10        =", power(2, 10));
+print("3^5         =", power(3, 5));
+print("Sphere r=2  =", sphere_vol(2.0));
+print("Sphere r=5  =", sphere_vol(5.0));
+
+# -----------------------------------------------------------------------
+# HEAP ALLOCATION SIMULATION
+# Lumen models heap allocation via struct literals and class instances.
+# Stage 12 in the pipeline shows the malloc/free simulation log.
+# We use parallel float arrays here which also go on the heap as
+# Python list objects - each list allocation is tracked.
+# -----------------------------------------------------------------------
+float[] planet_mass     = [0.055, 0.815, 1.000, 0.107, 317.8];
+float[] planet_radius   = [2439.0, 6052.0, 6371.0, 3390.0, 69911.0];
+float[] planet_dist_au  = [0.387, 0.723, 1.000, 1.524, 5.203];
+string[] planet_name    = ["Mercury", "Venus", "Earth", "Mars", "Jupiter"];
+
+print("=== Heap Allocated Arrays (Planet Catalogue) ===");
+int hi = 0;
+while (hi < N_PLANETS) {
+    print("Planet:", planet_name[hi]);
+    print("  mass    :", planet_mass[hi], "Earth masses");
+    print("  radius  :", planet_radius[hi], "km");
+    print("  distance:", planet_dist_au[hi], "AU");
+    hi = hi + 1;
+}
+
+# -----------------------------------------------------------------------
+# SWITCH: zone classification
+# -----------------------------------------------------------------------
+def classify_zone(float dist) {
+    if (dist < 2.0)  { return 1; }
+    if (dist < 4.0)  { return 2; }
+    if (dist < 10.0) { return 3; }
+    return 4;
+}
+
+def print_zone(int z) {
+    switch (z) {
+        case 1: { print("  Zone: Inner rocky"); }
+        case 2: { print("  Zone: Asteroid belt"); }
+        case 3: { print("  Zone: Gas giant"); }
+        case 4: { print("  Zone: Ice giant / outer"); }
+    }
+    return z;
+}
+
+print("=== Switch: Zone Classification ===");
+int zi = 0;
+while (zi < N_PLANETS) {
+    print("Planet:", planet_name[zi], "at", planet_dist_au[zi], "AU");
+    int zone  = classify_zone(planet_dist_au[zi]);
+    int dummy = print_zone(zone);
+    zi = zi + 1;
+}
+
+# -----------------------------------------------------------------------
+# TRY / CATCH / FINALLY
+# -----------------------------------------------------------------------
+def safe_log(float val) {
+    if (val <= 0.0) {
+        throw "log of non-positive number";
+    }
+    if (val < 0.5)  { return -0.693; }
+    if (val < 1.5)  { return 0.0;    }
+    if (val < 3.0)  { return 1.099;  }
+    if (val < 8.0)  { return 1.946;  }
+    if (val < 20.0) { return 2.996;  }
+    return 4.0;
+}
+
+float[] log_tests = [1.0, 2.0, 7.0, 0.0, 15.0, -1.0];
+print("=== Try / Catch / Finally ===");
+int li = 0;
+while (li < 6) {
+    try {
+        float logv = safe_log(log_tests[li]);
+        print("log(", log_tests[li], ") ~=", logv);
+    } catch (err) {
+        print("Error:", err, "for value", log_tests[li]);
+    } finally {
+        print("  done");
+    }
+    li = li + 1;
+}
+
+# -----------------------------------------------------------------------
+# CONST and TYPE ALIAS
+# -----------------------------------------------------------------------
+type SolarMass = float;
+type AU        = float;
+
+const float SOLAR_RADIUS = 695700.0;
+const float LIGHT_SPEED  = 299792.0;
+const int   SECS_PER_YEAR = 31557600;
+
+float ly_km = LIGHT_SPEED * SECS_PER_YEAR;
+print("=== Constants and Type Aliases ===");
+print("Solar radius    :", SOLAR_RADIUS, "km");
+print("Speed of light  :", LIGHT_SPEED, "km/s");
+print("1 light year    :", ly_km, "km");
+
+# -----------------------------------------------------------------------
+# RECURSIVE ARRAY PROCESSING
+# -----------------------------------------------------------------------
+def count_inner(int i) {
+    if (i >= N_PLANETS) { return 0; }
+    int here = 0;
+    if (planet_dist_au[i] < 2.0) { here = 1; }
+    return here + count_inner(i + 1);
+}
+
+def count_outer(int i) {
+    if (i >= N_PLANETS) { return 0; }
+    int here = 0;
+    if (planet_dist_au[i] >= 2.0) { here = 1; }
+    return here + count_outer(i + 1);
+}
+
+def sum_mass(int i) {
+    if (i >= N_PLANETS) { return 0.0; }
+    return planet_mass[i] + sum_mass(i + 1);
+}
+
+int inner = count_inner(0);
+int outer = count_outer(0);
+float total_mass = sum_mass(0);
+
+print("=== Solar System Summary ===");
+print("Inner planets (< 2 AU) :", inner);
+print("Outer planets (>= 2 AU):", outer);
+print("Total planet mass (Earth masses):", total_mass);
+print("");
+print("=== OPTIMISATION DEMO COMPLETE ===");
+print("Stage 8  -> optimisation report");
+print("Stage 12 -> heap allocation log");

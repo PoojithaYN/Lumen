@@ -1,0 +1,7 @@
+digraph CFG {
+  rankdir=TB;
+  node [shape=box, fontname="Courier", fontsize=10];
+  "ENTRY" [label="ENTRY\nfuncdef(name='greet', params=['name'], p\nfuncdef(name='add', params=['a', 'b'], p\nfuncdef(name='is_bright', params=['magni\ncall(name='greet', args=[string(value='A\n...+3 more\nlive: {}"];
+  "EXIT" [label="EXIT"];
+  "ENTRY" -> "EXIT";
+}

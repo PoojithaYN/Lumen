@@ -1,7 +1,0 @@
-def flux_from_mag(mag) {
-    return 1000 / (2.512 ^ mag);
-}
-
-float m = 5;
-float f = flux_from_mag(m);
-print(f);

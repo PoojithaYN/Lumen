@@ -1,2 +1,0 @@
-dataset d = load("stars.csv");
-filter d mag < 10;
